@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+# From an installation project folder (configured to connect to pcf/opsmanager), run following to upload tiles 
+# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/om-install.sh"  | bash
+
 
 function pipe(){
     product=$1
