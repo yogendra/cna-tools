@@ -1,5 +1,5 @@
 " Run 
-" wget -qO $HOME/.vimrc "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/vimrc"
+" wget -qO $HOME/.vimrc "https://gist.githubusercontent.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/vimrc"
 " After installation goto vim and run 
 " : PlugInstall
 set nobackup
