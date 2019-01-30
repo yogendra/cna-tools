@@ -100,6 +100,11 @@ echo Downloading: docker-compose
 wget -q -O $PROJ_DIR/bin/docker-compose  "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)"
 chmod a+x $PROJ_DIR/bin/docker-compose
 
+echo Downloading: riff
+wget -qO /tmp/riff.tgz "https://github.com/projectriff/riff/releases/download/v0.2.0/riff-linux-amd64.tgz"
+tar -C $PROJ_DIR/bin -xz /tmp/riff.tgz ./riff
+rm /tmp/riff.tgz
+
 
 echo Downloading: pivnet
 wget -q -O $PROJ_DIR/bin/pivnet  "https://github.com/pivotal-cf/pivnet-cli/releases/download/v0.0.55/pivnet-linux-amd64-0.0.55"
@@ -110,6 +115,14 @@ echo PivNet Download: PKS client
 pivnet dlpf -p pivotal-container-service -r 1.2.1 -i 239440 -d /tmp --accept-eula 
 mv /tmp/pks-linux-amd64-1.2.1-build.* $PROJ_DIR/bin/pks   
 chmod a+x $PROJ_DIR/bin/pks
+
+echo PivNet Download: PFS client
+pivnet dlpf -p pivotal-function-service  -r "alpha v0.1.0 " -i 268754  -d /tmp --accept-eula
+tar -C $PROJ_DIR/bin -xzvf /tmp/pfs-cli-linux-amd64-20181128193639-e5de84d12d10a060aeb595310decbe7409467c99.tgz ./pfs
+rm /tmp/pfs-cli-linux-amd64-20181128193639-e5de84d12d10a060aeb595310decbe7409467c99.tgz
+chmod a+x $PROJ_DIR/bin/pfs
+
+
 
 echo Put SSH keys
 wget -qO - "https://gist.githubusercontent.com/yogendra/c3ebfc2f5c1bccee7da9c427dad2a472/raw/gandiv.pub" >> $HOME/.ssh/authorized_keys
