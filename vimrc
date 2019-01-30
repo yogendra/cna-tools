@@ -1,3 +1,7 @@
+" Run 
+" wget -qO $HOME/.vimrc "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/vimrc"
+" After installation goto vim and run 
+" : PlugInstall
 set nobackup
 set nowritebackup
 set noswapfile
