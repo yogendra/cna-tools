@@ -123,6 +123,19 @@ rm /tmp/pfs-cli-linux-amd64-20181128193639-e5de84d12d10a060aeb595310decbe7409467
 chmod a+x $PROJ_DIR/bin/pfs
 
 
+echo Setting Up UAAC
+sudo apt-get install autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm5 libgdbm-dev
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+cd ~/.rbenv && src/configure && make -C src
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile
+echo 'eval $(rbenv init -)' >> ~/.profile
+eval "$(~/.rbenv/bin/rbenv init -)"
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+rbenv install 2.4.1
+rbenv global 2.4.1
+rbenv rehash
+gem install cf-uaac
+
 
 echo Put SSH keys
 wget -qO - "https://gist.githubusercontent.com/yogendra/c3ebfc2f5c1bccee7da9c427dad2a472/raw/gandiv.pub" >> $HOME/.ssh/authorized_keys
@@ -152,4 +165,6 @@ wget -qO $HOME/.vimrc "https://gist.githubusercontent.com/yogendra/318c09f0cd254
 
 echo Setting TMUX
 echo "new-session" > $HOME/.tmux.conf
+
+
 echo Done
