@@ -105,6 +105,13 @@ echo Downloading: jq
 wget -q -O $PROJ_DIR/bin/jq  $URL
 chmod a+x $PROJ_DIR/bin/jq
 
+# Get updated url at "https://github.com/pivotal-cf/texplate/releases/latest
+URL="https://github.com/pivotal-cf/texplate/releases/download/v0.3.0/texplate_linux_amd64"
+echo Downloading: texplate
+wget -q -O $PROJ_DIR/bin/texplate  $URL
+chmod a+x $PROJ_DIR/bin/texplate
+
+
 # Get updated url at https://github.com/docker/compose/releases/latest
 URL="https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)"
 echo Downloading: docker-compose
