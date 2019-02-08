@@ -22,68 +22,150 @@ General Instrucations
 ========================================================================
 EOF
 
+# Get updated url at https://github.com/cloudfoundry/bosh-cli/releases/latest
+URL="https://github.com/cloudfoundry/bosh-cli/releases/download/v5.4.0/bosh-cli-5.4.0-linux-amd64"
 set -e
 echo Downloading: bosh
-wget -q -O $PROJ_DIR/bin/bosh  "https://github.com/cloudfoundry/bosh-cli/releases/download/v5.3.1/bosh-cli-5.3.1-linux-amd64" 
+wget -q -O $PROJ_DIR/bin/bosh  $URL
 chmod a+x $PROJ_DIR/bin/bosh 
 
+# Get updated url at https://www.terraform.io/downloads.html
+URL="https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip"
 echo Downloading: terraform
-wget -q -O /tmp/terraform.zip "https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip" 
+wget -q -O /tmp/terraform.zip $URL
 gunzip -S .zip /tmp/terraform.zip 
 mv /tmp/terraform $PROJ_DIR/bin/terraform
 chmod a+x $PROJ_DIR/bin/terraform 
 
-
+# Get updated url at https://github.com/cloudfoundry/bosh-bootloader/releases/latest
+URL="https://github.com/cloudfoundry/bosh-bootloader/releases/download/v7.0.13/bbl-v7.0.13_linux_x86-64" 
 echo Downloading: bbl
-wget -q -O $PROJ_DIR/bin/bbl "https://github.com/cloudfoundry/bosh-bootloader/releases/download/v6.10.18/bbl-v6.10.18_linux_x86-64" 
+wget -q -O $PROJ_DIR/bin/bbl $URL
 chmod a+x $PROJ_DIR/bin/bbl 
 
+
+# Get updated url at https://github.com/concourse/concourse/releases/latest
+URL="https://github.com/concourse/concourse/releases/download/v4.2.2/fly_linux_amd64" 
 echo Downloading: fly
-wget -q -O $PROJ_DIR/bin/fly "https://github.com/concourse/concourse/releases/download/v4.2.1/fly_linux_amd64" 
+wget -q -O $PROJ_DIR/bin/fly $URL
 chmod a+x $PROJ_DIR/bin/fly
 
+# Get updated url at https://github.com/pivotal-cf/om/releases/latest
+URL="https://github.com/pivotal-cf/om/releases/download/0.51.0/om-linux" 
 echo Downloading: om
-wget -q -O $PROJ_DIR/bin/om "https://github.com/pivotal-cf/om/releases/download/0.44.0/om-linux" 
+wget -q -O $PROJ_DIR/bin/om $URL
 chmod a+x $PROJ_DIR/bin/om 
 
+# Get updated url at https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/latest
+URL="https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/download/v1.3.2/bbr-1.3.2-linux-amd64"
 echo Downloading: bbr
-wget -q -O - "https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/download/v1.2.8/bbr-1.2.8.tar"  | tar -C /tmp -x  releases/bbr
-mv /tmp/releases/bbr $PROJ_DIR/bin/bbr
-chmod a+x $PROJ_DIR/bin/bbr 
-rm -rf /tmp/releases 
+wget -q -O $PROJ_DIR/bin/bbr $URL
+chmod a+x $PROJ_DIR/bin/bbr
 
+# Always updated version :D
+# Get updated url at https://docs.cloudfoundry.org/cf-cli/install-go-cli.html#pkg-linux
+URL="https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github"
 echo Downloading: cf
-wget -q -O -  "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -C $PROJ_DIR/bin -zx cf  
+wget -q -O -  $URL | tar -C $PROJ_DIR/bin -zx cf  
 chmod a+x $PROJ_DIR/bin/cf 
 
+# Get updated url at https://github.com/cloudfoundry-incubator/credhub-cli/releases/latest
+URL="https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/2.2.1/credhub-linux-2.2.1.tgz" 
 echo Downloading: credhub
-wget -q -O - "https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/2.2.1/credhub-linux-2.2.1.tgz"  | tar -C /tmp -xz  ./credhub
+wget -q -O - $URL | tar -C /tmp -xz  ./credhub
 mv /tmp/credhub $PROJ_DIR/bin/credhub
 chmod a+x $PROJ_DIR/bin/credhub
 
 
+# Always updated version :D
+# Get updated url at https://storage.googleapis.com/kubernetes-release/release/stable.txt
+URL="https://storage.googleapis.com/kubernetes-release/release/$(wget -q -O - https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
 echo Downloading: kubectl
-wget -q -O $PROJ_DIR/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(wget -q -O - https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+wget -q -O $PROJ_DIR/bin/kubectl $URL
 chmod a+x $PROJ_DIR/bin/kubectl
 
 
+# Get updated url at https://download.docker.com/linux/static/stable/x86_64/
+URL="https://download.docker.com/linux/static/stable/x86_64/docker-18.09.1.tgz"
 echo Downloading: docker
-wget -q -O - "https://download.docker.com/linux/static/stable/x86_64/docker-18.09.1.tgz"  | tar -C /tmp -xz  docker/docker
+wget -q -O - $URL  | tar -C /tmp -xz  docker/docker
 mv /tmp/docker/docker $PROJ_DIR/bin/docker
 chmod a+x $PROJ_DIR/bin/docker
 rm -rf /tmp/docker
 
+# Get updated url at https://github.com/docker/machine/releases/latest
+URL="https://github.com/docker/machine/releases/download/v0.16.1/docker-machine-$(uname -s)-$(uname -m)"
 echo Downloading: docker-machine
-wget -q -O $PROJ_DIR/bin/docker-machine  "https://github.com/docker/machine/releases/download/v0.16.0/docker-machine-$(uname -s)-$(uname -m)"
+wget -q -O $PROJ_DIR/bin/docker-machine  $URL
 chmod a+x $PROJ_DIR/bin/docker-machine
 
-
+# Get updated url at "https://github.com/stedolan/jq/releases/latest
+URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
 echo Downloading: jq
-wget -q -O $PROJ_DIR/bin/jq  "https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
+wget -q -O $PROJ_DIR/bin/jq  $URL
 chmod a+x $PROJ_DIR/bin/jq
 
+# Get updated url at https://github.com/docker/compose/releases/latest
+URL="https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)"
+echo Downloading: docker-compose
+wget -q -O $PROJ_DIR/bin/docker-compose  $URL
+chmod a+x $PROJ_DIR/bin/docker-compose
+
+# Get updated url at https://github.com/projectriff/riff/releases/latest
+URL="https://github.com/projectriff/riff/releases/download/v0.2.0/riff-linux-amd64.tgz"
+echo Downloading: riff
+wget -qO /tmp/riff.tgz $URL
+tar -C $PROJ_DIR/bin -xzf /tmp/riff.tgz ./riff
+rm /tmp/riff.tgz
+
+# Get updated url at https://github.com/pivotal-cf/pivnet-cli/releases/latest
+URL="https://github.com/pivotal-cf/pivnet-cli/releases/download/v0.0.55/pivnet-linux-amd64-0.0.55"
+echo Downloading: pivnet
+wget -q -O $PROJ_DIR/bin/pivnet  $URL
+chmod a+x $PROJ_DIR/bin/pivnet
+# $PROJ_DIR/bin/pivnet login --api-token=$PIVNET_TOKEN
+
+# Get updated url at https://network.pivotal.io/products/pivotal-container-service/
+VERSION=1.3.0
+echo PivNet Download: PKS client
+om download-product  -t $PIVNET_TOKEN -p pivotal-container-service -v $VERSION --pivnet-file-glob='pks-linux-amd64-*'  -o /tmp
+mv /tmp/pks-linux-amd64-* $PROJ_DIR/bin/pks
+chmod a+x $PROJ_DIR/bin/pks
+
+# Get updated url at https://network.pivotal.io/products/pivotal-function-service/
+VERSION=0.1.0
+echo PivNet Download: PFS client
+om download-product  -t $PIVNET_TOKEN -p pivotal-function-service -v $VERSION --pivnet-file-glob='pfs-cli-linux-amd64-*'  -o /tmp
+tar -C $PROJ_DIR/bin -xzvf /tmp/pfs-cli-linux-amd64-*.tgz ./pfs
+rm /tmp/pfs-cli-linux-amd64-*.tgz
+chmod a+x $PROJ_DIR/bin/pfs
+
+# Get updated url at https://network.pivotal.io/products/p-scheduler
+VERSION=1.2.5
+echo PivNet Download: Scheduler CF CLI Plugin
+om download-product  -t $PIVNET_TOKEN -p p-scheduler -v $VERSION --pivnet-file-glob='scheduler-for-pcf-cliplugin-linux64-binary-* ' -o /tmp
+cf install-plugin /tmp/scheduler-for-pcf-cliplugin-linux64-binary-* 
+rm /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
+
+# Get updated url at https://network.pivotal.io/products/pcf-app-autoscaler
+VERSION=2.0.19
+echo PivNet Download: App Autoscaler CF CLI Plugin
+om download-product  -t $PIVNET_TOKEN -p pcf-app-autoscaler -v $VERSION --pivnet-file-glob='autoscaler-for-pcf-cliplugin-linux64-binary-*'  -o /tmp
+cf install-plugin /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
+rm /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
+
+# Get updated url at https://network.pivotal.io/products/p-event-alerts
+VERSION=1.1.1
+echo PivNet Download: Event Alerts CF CLI Plugin
+om download-product  -t $PIVNET_TOKEN -p p-event-alerts -v $VERSION --pivnet-file-glob='pcf-event-alerts-cli-plugin-linux64-*'  -o /tmp
+cf install-plugin /tmp/pcf-event-alerts-cli-plugin-linux64-*
+rm /tmp/pcf-event-alerts-cli-plugin-linux64-*
+
+# Get updated url at https://github.com/direnv/direnv/releases/latest
+URL="https://github.com/direnv/direnv/releases/download/v2.19.1/direnv.linux-amd64"
 echo Downloading: direnv
-wget -q -O $PROJ_DIR/bin/direnv  "https://github.com/direnv/direnv/releases/download/v2.19.0/direnv.linux-amd64"
+wget -q -O $PROJ_DIR/bin/direnv  $URL
+
 chmod a+x $PROJ_DIR/bin/direnv
 wget -qO - "https://gist.githubusercontent.com/yogendra/7d23440d2d139cf8d426/raw/direnvrc" >> $HOME/.direnvrc
 cat <<EOF
@@ -96,35 +178,8 @@ direnv: Additional Instrucations
 ========================================================================
 EOF
 
-echo Downloading: docker-compose
-wget -q -O $PROJ_DIR/bin/docker-compose  "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)"
-chmod a+x $PROJ_DIR/bin/docker-compose
-
-echo Downloading: riff
-wget -qO /tmp/riff.tgz "https://github.com/projectriff/riff/releases/download/v0.2.0/riff-linux-amd64.tgz"
-tar -C $PROJ_DIR/bin -xz /tmp/riff.tgz ./riff
-rm /tmp/riff.tgz
-
-
-echo Downloading: pivnet
-wget -q -O $PROJ_DIR/bin/pivnet  "https://github.com/pivotal-cf/pivnet-cli/releases/download/v0.0.55/pivnet-linux-amd64-0.0.55"
-chmod a+x $PROJ_DIR/bin/pivnet
-$PROJ_DIR/bin/pivnet login --api-token=$PIVNET_TOKEN
-
-echo PivNet Download: PKS client
-pivnet dlpf -p pivotal-container-service -r 1.2.1 -i 239440 -d /tmp --accept-eula 
-mv /tmp/pks-linux-amd64-1.2.1-build.* $PROJ_DIR/bin/pks   
-chmod a+x $PROJ_DIR/bin/pks
-
-echo PivNet Download: PFS client
-pivnet dlpf -p pivotal-function-service  -r "alpha v0.1.0 " -i 268754  -d /tmp --accept-eula
-tar -C $PROJ_DIR/bin -xzvf /tmp/pfs-cli-linux-amd64-20181128193639-e5de84d12d10a060aeb595310decbe7409467c99.tgz ./pfs
-rm /tmp/pfs-cli-linux-amd64-20181128193639-e5de84d12d10a060aeb595310decbe7409467c99.tgz
-chmod a+x $PROJ_DIR/bin/pfs
-
-
 echo Setting Up UAAC
-sudo apt-get install autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm5 libgdbm-dev
+sudo apt-get install autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm5 libgdbm-dev unzip
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 cd ~/.rbenv && src/configure && make -C src
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.profile

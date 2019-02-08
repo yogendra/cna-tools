@@ -42,7 +42,6 @@ use_toolsmith() {
     export OM_TARGET=$(jq -r .ops_manager_dns ${PCF_ENV_FILE})
     export OM_USERNAME=$(jq -r .ops_manager.username ${PCF_ENV_FILE})
     export OM_PASSWORD=$(jq -r .ops_manager.password ${PCF_ENV_FILE})
-    export OM_CA_CERTS=$PWD/opsman-ca-certs.pem
     export OM_KEY=$PWD/opsman.key
     export OM_SKIP_SSL_VALIDATION=true
     
@@ -53,13 +52,8 @@ use_toolsmith() {
         echo "$(jq -r .ops_manager_private_key < ${PCF_ENV_FILE})" > ${OM_KEY} && chmod 600 ${OM_KEY} 
     fi
     
-    if [[ ! -f $OM_CA_CERTS ]]
-    then
-        echo Extracting Ops Manager ca certifiactes
-        om -k certificate-authorities --format json | jq -r '.[].cert_pem' > $OM_CA_CERTS
-    fi
-    export PCF_DOMAIN=$TS_G_ENV.$ROOT_DOMAIN
 }
+
 use_pcf() {
     # Required Variables:
     # OM_TARGET - OpsMan Address
@@ -73,6 +67,21 @@ use_pcf() {
         echo "OM_TARGET, OM_USERNAME, OM_PASSWORD and OM_KEY are required to be set"
         exit 1
     fi
+    
+    if [[ ! -e $OM_KEY ]]
+    then
+      echo "$OM_KEY: missing"
+      ecit 1
+    fi
+    
+    export OM_CA_CERTS=$PWD/opsman-ca-certs.pem
+    if [[ ! -f $OM_CA_CERTS ]]
+    then
+        echo Extracting Ops Manager ca certifiactes
+        om -k certificate-authorities --format json | jq -r '.[].cert_pem' > $OM_CA_CERTS
+    fi
+    export PCF_DOMAIN=$TS_G_ENV.$ROOT_DOMAIN
+
 
     export PCF_DOMAIN=${1:-$PCF_DOMAIN}
     

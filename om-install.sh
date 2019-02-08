@@ -9,7 +9,7 @@ function pipe(){
     fileglob=$3
     ufileglob=$(echo $fileglob | sed 's/\\//')
 
-    echo pivnet dlpf -p $product -r $version -g $fileglob
+    echo om download-product --pivnet-api-token $PIVNET_TOKEN  --product $product --product-version $version --pivnet-file-glob $fileglob
     echo om -k upload-product -p $ufileglob
 }
 pipe apm '1.6.0'  "apm\*.pivotal"
