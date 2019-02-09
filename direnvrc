@@ -138,7 +138,7 @@ use_pcf() {
     export_function pcf-opsman
 
     function pcf-opsman-ssh {
-        ssh -i $PCF_OPSMAN_KEYFILE -o StrictHostKeyChecking=no ubuntu@$OM_TARGET $*
+        ssh -i $OM_KEY -o StrictHostKeyChecking=no ubuntu@$OM_TARGET $*
     }
     export_function pcf-opsman-ssh    
 }
