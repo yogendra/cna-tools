@@ -61,6 +61,10 @@ use_pcf() {
     # OM_PASSWORD - OpsMan password 
     # OM_SKIP_SSL_VALIDATION - Skip OpsMan SSL checks
     # OM_KEY - path to OpsMsn key
+    export UAAC_HOME=$PWD
+    export PCF_OPSMAN_KEYFILE=$OM_KEY
+    export OM_CA_CERTS=$PWD/opsman-ca-certs.pem
+
     
     if [ -z "$OM_TARGET" -o -z "$OM_USERNAME" -o -z "$OM_PASSWORD" -o -z "$OM_KEY" ]
     then
@@ -144,6 +148,7 @@ use_pcf() {
 }
 
 use_pcf-pas() {
+    export CF_HOME=$PWD
     export PCF_DOMAIN=${1:-$PCF_DOMAIN}
     
     [[ -z $PCF_DOMAIN ]] && echo "You need to provide pcf domain root or set PCF_DOMAIN variable" && exit 1
