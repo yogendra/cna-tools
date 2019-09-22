@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# wget -q https://go.yogendra.me/setup-vim | bash
+# wget -q https://yogendra.me/setup-vim | bash
+# Or
+# curl -sL https://yogendra.me/setup-vim | bash
 echo Setup VIM
 mkdir -p .vim/autoload
 wget -qO $HOME/.vim/autoload/plug.vim "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
