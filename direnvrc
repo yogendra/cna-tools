@@ -51,7 +51,8 @@ use_toolsmith() {
         echo Extracting Ops Man key
         echo "$(jq -r .ops_manager_private_key < ${PCF_ENV_FILE})" > ${OM_KEY} && chmod 600 ${OM_KEY} 
     fi
-    
+
+    export PCF_DOMAIN=$TS_G_ENV.$ROOT_DOMAIN
 }
 
 use_pcf() {
@@ -61,10 +62,16 @@ use_pcf() {
     # OM_PASSWORD - OpsMan password 
     # OM_SKIP_SSL_VALIDATION - Skip OpsMan SSL checks
     # OM_KEY - path to OpsMsn key
-    export UAAC_HOME=$PWD
+
     export PCF_OPSMAN_KEYFILE=$OM_KEY
     export OM_CA_CERTS=$PWD/opsman-ca-certs.pem
 
+    export UAAC_HOME=$PWD
+    if [[ ! -f $OM_CA_CERTS ]]
+    then
+        echo Extracting Ops Manager ca certifiactes
+        om -k certificate-authorities --format json | jq -r '.[].cert_pem' > $OM_CA_CERTS
+    fi
     
     if [ -z "$OM_TARGET" -o -z "$OM_USERNAME" -o -z "$OM_PASSWORD" -o -z "$OM_KEY" ]
     then
@@ -84,8 +91,6 @@ use_pcf() {
         echo Extracting Ops Manager ca certifiactes
         om -k certificate-authorities --format json | jq -r '.[].cert_pem' > $OM_CA_CERTS
     fi
-    export PCF_DOMAIN=$TS_G_ENV.$ROOT_DOMAIN
-
 
     export PCF_DOMAIN=${1:-$PCF_DOMAIN}
     
@@ -180,6 +185,8 @@ use_pcf-pas() {
 use_pcf-pks () {
 
     export PCF_DOMAIN=${1:-$PCF_DOMAIN}
+    export KUBECONFIG=$PWD/.kubeconfig
+    export HELM_HOME=$PWD/.helm
     
     [[ -z $PCF_DOMAIN ]] && echo "You need to provide pcf domain root or set PCF_DOMAIN variable" && exit 1
 
@@ -196,22 +203,6 @@ use_pcf-pks () {
     }
     export_function pcf-info
 
-    function pcf-pks-create-cluster {
-        CLUSTER_ID=${1:-cluster-1}
-        CLUSTER_PLAN=${2:-small}
-        CLUSTER_NAME=${TS_G_ENV}-pks-${CLUSTER_ID}
-        CLUSTER_HOSTNAME=${CLUSTER_ID}.${PCF_DOMAIN}
-        pks create-cluster  $CLUSTER_NAME --external-hostname ${CLUSTER_HOSTNAME} --plan $CLUSTER_PLAN && \
-        if ! nslookup  $CLUSTER_HOSTNAME >> /dev/null
-        then
-            cat <<EOF
-$CLUSTER_HOSTNAME: not found. 
-- You should configure it on the DNS  
-- On GCP use GCP Consol > Networking > Cloud DNS (https://console.cloud.google.com/net-services/dns/zones) to set correct IP
-- On AWS [WIP]
-- On Azure [WIP]
-EOF
-        fi
-    }
+   
     export_function pcf-pks-create-cluster
 }
