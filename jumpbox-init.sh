@@ -11,6 +11,7 @@ PIVNET_TOKEN=${PIVNET_TOKEN}
 [[ -z $PIVNET_TOKEN ]] && echo "PIVNET_TOKEN environment variable not set. See instructions at https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec#jumpbox-init-sh" && exit 1
 echo PROJ_DIR=$PROJ_DIR
 [[ -d $PROJ_DIR/bin ]]  || mkdir -p $PROJ_DIR/bin
+GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
 
 cat <<EOF
 ========================================================================
@@ -169,7 +170,8 @@ echo Downloading: direnv
 wget -q  $URL -O $PROJ_DIR/bin/direnv
 chmod a+x $PROJ_DIR/bin/direnv
 
-wget -qO - "https://gist.githubusercontent.com/yogendra/7d23440d2d139cf8d426/raw/direnvrc" >> $HOME/.direnvrc
+wget -q "${GIST}/raw/.direnvrc" -O $HOME/.direnvrc
+
 cat <<EOF
 ========================================================================
 direnv: Additional Instrucations
@@ -202,34 +204,27 @@ cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 
 
+mkdir -p .vim/autoload
+wget -q "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" -O $HOME/.vim/autoload/plug.vim 
+wget -q "${GIST}/raw/.vimrc" -O $HOME/.vimrc
+
+echo Setting TMUX
+wget -q "${GIST}/raw/.tmux.conf" -O $HOME/.tmux.conf
+
 echo Put SSH keys
-wget -qO - "https://gist.githubusercontent.com/yogendra/c3ebfc2f5c1bccee7da9c427dad2a472/raw/gandiv.pub" >> $HOME/.ssh/authorized_keys
-wget -qO - "https://gist.githubusercontent.com/yogendra/c3ebfc2f5c1bccee7da9c427dad2a472/raw/mbp15.pub" >> $HOME/.ssh/authorized_keys
-wget -qO - "https://gist.githubusercontent.com/yogendra/c3ebfc2f5c1bccee7da9c427dad2a472/raw/parasu.pub" >> $HOME/.ssh/authorized_keys
-wget -qO - "https://gist.githubusercontent.com/yogendra/c3ebfc2f5c1bccee7da9c427dad2a472/raw/pinaka.pub" >> $HOME/.ssh/authorized_keys
-ssh-keygen  -q -t rsa -N ""
-ssh-keygen  -q -t dsa -N ""
+wget -q $GIST/raw/keys | while read key; do
+  wget -qO - "$key" >> $HOME/.ssh/authorized_keys
+done
+
 cat <<EOF
 ========================================================================
 SSH Config
 ========================================================================
- New Keys generated. Here are the public keys for passwordless access
-
+To generate new keys and setup passwordless login run:
+ssh-keygen  -q -t rsa -N ""
+ssh-keygen  -q -t dsa -N ""
+cat ~/.ssh/*.pub >> $HOME/.ssh/authorized_keys
 EOF
-
-cat $HOME/.ssh/*.pub 
-
-echo ========================================================================
-
-chmod 600 $HOME/.ssh/authorized_keys
-
-echo Setup VIM
-mkdir -p .vim/autoload
-wget -qO $HOME/.vim/autoload/plug.vim "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-wget -qO $HOME/.vimrc "https://gist.githubusercontent.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/vimrc"    
-
-echo Setting TMUX
-echo "new-session" > $HOME/.tmux.conf
 
 
 echo Done
