@@ -198,8 +198,8 @@ rm /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
 VERSION=1.2.8
 echo PivNet Download: Event Alerts CF CLI Plugin
 om download-product --pivnet-file-glob='pcf-event-alerts-cli-plugin-linux64-binary-*' -v $VERSION -t $PIVNET_TOKEN -p p-event-alerts -o /tmp
-cf install-plugin -f /tmp/linux64-*
-rm /tmp/linux64-*
+cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
+rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 
 
 echo Put SSH keys
