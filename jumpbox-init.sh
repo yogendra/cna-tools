@@ -158,7 +158,7 @@ chmod a+x $PROJ_DIR/bin/duffle
 # Get updated url at https://github.com/sharkdp/bat/releases/latest
 URL=https://github.com/sharkdp/bat/releases/download/v0.12.1/bat-v0.12.1-x86_64-unknown-linux-gnu.tar.gz
 echo Downloading: bat
-wget -q  $URL -O- | tar x -C /tmp bat-v0.12.1-x86_64-unknown-linux-gnu/bat
+wget -q  $URL -O- | tar -C /tmp -xz bat-v0.12.1-x86_64-unknown-linux-gnu/bat
 mv /tmp/bat-*/bat $PROJ_DIR/bin/bat
 chmod a+x bat
 rm -rf /tmp/bat-*
