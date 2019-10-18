@@ -147,10 +147,13 @@ chmod a+x $PROJ_DIR/bin/pks
 # Get updated url at https://network.pivotal.io/products/pivotal-function-service/
 VERSION="alpha v0.4.0"
 echo PivNet Download: PFS client
-om download-product --pivnet-file-glob='pfs-cli-linux-amd64-*' -v "$VERSION" -t $PIVNET_TOKEN -p pivotal-function-service -o /tmp
+om download-product -o /tmp -t $PIVNET_TOKEN -p pivotal-function-service --pivnet-file-glob='pfs-cli-linux-amd64-*' -v "$VERSION" 
 mv /tmp/pfs-cli-linux-amd64-* $PROJ_DIR/bin/pfs
-rm /tmp/pfs-cli-linux-amd64-*
 chmod a+x $PROJ_DIR/bin/pfs
+
+om download-product -o /tmp -t $PIVNET_TOKEN -p pivotal-function-service --pivnet-file-glob='duffle-linux-*' -v "$VERSION" 
+mv /tmp/duffle-linux-* $PROJ_DIR/bin/duffle
+chmod a+x $PROJ_DIR/bin/duffle
 
 # Get updated url at https://github.com/sharkdp/bat/releases/latest
 URL=https://github.com/sharkdp/bat/releases/download/v0.12.1/bat-v0.12.1-x86_64-unknown-linux-gnu.tar.gz
