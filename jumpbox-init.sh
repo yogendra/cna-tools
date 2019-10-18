@@ -3,9 +3,9 @@
 #  PROJ_DIR : Project Directory. All tools will get install under PROJ_DIR/bin. (defaults: /usr/local)
 #  PIVNET_TOKEN: Pivotal Network Token (required)
 # Run 
-# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init"  | PIVNET_TOKEN=56789fghy-r bash
+# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | PIVNET_TOKEN=56789fghy-r bash
 # Or to put binaries at your preferred location (example: /home/me/bin), provide PROD_DIR
-# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init"  | PIVNET_TOKEN=76897tyfgdghkj-r PROJ_DIR=/home/yrampuria bash
+# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | PIVNET_TOKEN=76897tyfgdghkj-r PROJ_DIR=/home/yrampuria bash
 PROJ_DIR=${PROJ_DIR:-/usr/local}
 PIVNET_TOKEN=${PIVNET_TOKEN}
 [[ -z $PIVNET_TOKEN ]] && echo "PIVNET_TOKEN environment variable not set. See instructions at https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec#jumpbox-init-sh" && exit 1
