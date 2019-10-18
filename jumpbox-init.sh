@@ -197,7 +197,7 @@ rm /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
 # Get updated url at https://network.pivotal.io/products/p-event-alerts
 VERSION=1.2.8
 echo PivNet Download: Event Alerts CF CLI Plugin
-om download-product --pivnet-file-glob='linux64-*' -v $VERSION -t $PIVNET_TOKEN -p p-event-alerts -o /tmp
+om download-product --pivnet-file-glob='pcf-event-alerts-cli-plugin-linux64-binary-*' -v $VERSION -t $PIVNET_TOKEN -p p-event-alerts -o /tmp
 cf install-plugin -f /tmp/linux64-*
 rm /tmp/linux64-*
 
