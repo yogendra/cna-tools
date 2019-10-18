@@ -148,8 +148,8 @@ chmod a+x $PROJ_DIR/bin/pks
 VERSION="alpha v0.4.0"
 echo PivNet Download: PFS client
 om download-product --pivnet-file-glob='pfs-cli-linux-amd64-*' -v "$VERSION" -t $PIVNET_TOKEN -p pivotal-function-service -o /tmp
-tar -C $PROJ_DIR/bin -xzvf /tmp/pfs-cli-linux-amd64-*.tgz ./pfs
-rm /tmp/pfs-cli-linux-amd64-*.tgz
+mv /tmp/pfs-cli-linux-amd64-* $PROJ_DIR/bin/pfs
+rm /tmp/pfs-cli-linux-amd64-*
 chmod a+x $PROJ_DIR/bin/pfs
 
 # Get updated url at https://github.com/sharkdp/bat/releases/latest
