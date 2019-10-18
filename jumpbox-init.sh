@@ -152,15 +152,21 @@ tar -C $PROJ_DIR/bin -xzvf /tmp/pfs-cli-linux-amd64-*.tgz ./pfs
 rm /tmp/pfs-cli-linux-amd64-*.tgz
 chmod a+x $PROJ_DIR/bin/pfs
 
-
+# Get updated url at https://github.com/sharkdp/bat/releases/latest
+URL=https://github.com/sharkdp/bat/releases/download/v0.12.1/bat-v0.12.1-x86_64-unknown-linux-gnu.tar.gz
+echo Downloading: bat
+wget -q  $URL -O- | tar x -C /tmp bat-v0.12.1-x86_64-unknown-linux-gnu/bat
+mv /tmp/bat-*/bat $PROJ_DIR/bin/bat
+chmod a+x bat
+rm -rf /tmp/bat-*
 
 
 # Get updated url at https://github.com/direnv/direnv/releases/latest
 URL="https://github.com/direnv/direnv/releases/download/v2.20.0/direnv.linux-amd64"
 echo Downloading: direnv
-wget -q -O $PROJ_DIR/bin/direnv  $URL
-
+wget -q  $URL -O $PROJ_DIR/bin/direnv
 chmod a+x $PROJ_DIR/bin/direnv
+
 wget -qO - "https://gist.githubusercontent.com/yogendra/7d23440d2d139cf8d426/raw/direnvrc" >> $HOME/.direnvrc
 cat <<EOF
 ========================================================================
