@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Set 2 Environment variables
 #  PROJ_DIR : Project Directory. All tools will get install under PROJ_DIR/bin. (defaults: /usr/local)
-#  PIVNET_TOKEN: Pivotal Network Token (required) Its **NOT** ending with -r. It looks like DJHASLD7_HSDHA7
+#  OM_PIVNET_TOKEN: Pivotal Network Token (required) Its **NOT** ending with -r. It looks like DJHASLD7_HSDHA7
 # Run 
-# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | PIVNET_TOKEN=DJHASLD7_HSDHA7 bash
+# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 bash
 # Or to put binaries at your preferred location (example: /home/me/bin), provide PROD_DIR
-# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | PIVNET_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/home/yrampuria bash
+# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/home/yrampuria bash
 PROJ_DIR=${PROJ_DIR:-/usr/local}
-PIVNET_TOKEN=${PIVNET_TOKEN}
-[[ -z $PIVNET_TOKEN ]] && echo "PIVNET_TOKEN environment variable not set. See instructions at https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec#jumpbox-init-sh" && exit 1
+OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
+[[ -z $OM_PIVNET_TOKEN ]] && echo "OM_PIVNET_TOKEN environment variable not set. See instructions at https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec#jumpbox-init-sh" && exit 1
 echo PROJ_DIR=$PROJ_DIR
 [[ -d $PROJ_DIR/bin ]]  || mkdir -p $PROJ_DIR/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
@@ -126,9 +126,9 @@ chmod a+x $PROJ_DIR/bin/riff
 
 # Get updated url at https://github.com/cloudfoundry-incubator/uaa-cli/releases/tag/0.8.0
 URL="https://github.com/cloudfoundry-incubator/uaa-cli/releases/download/0.8.0/uaa-linux-amd64-0.8.0"
-echo Downloading: uaac
-wget -q $URL -O $PROJ_DIR/bin/uaac
-chmod a+x $PROJ_DIR/bin/uaac
+echo Downloading: uaa
+wget -q $URL -O $PROJ_DIR/bin/uaa
+chmod a+x $PROJ_DIR/bin/uaa
 
 
 # Get updated url at https://github.com/pivotal-cf/pivnet-cli/releases/latest
@@ -136,23 +136,22 @@ URL="https://github.com/pivotal-cf/pivnet-cli/releases/download/v0.0.68/pivnet-l
 echo Downloading: pivnet
 wget -q $URL -O $PROJ_DIR/bin/pivnet
 chmod a+x $PROJ_DIR/bin/pivnet
-# $PROJ_DIR/bin/pivnet login --api-token=$PIVNET_TOKEN
 
 # Get updated url at https://network.pivotal.io/products/pivotal-container-service/
 VERSION=1.5.1
 echo PivNet Download: PKS client
-om download-product --pivnet-file-glob='pks-linux-amd64-*' -v "$VERSION" -t $PIVNET_TOKEN -p pivotal-container-service -o /tmp
+om download-product -t $OM_PIVNET_TOKEN -o /tmp -v $VERSION  -p pivotal-container-service --pivnet-file-glob='pks-linux-amd64-*'
 mv /tmp/pks-linux-amd64-* $PROJ_DIR/bin/pks
 chmod a+x $PROJ_DIR/bin/pks
 
 # Get updated url at https://network.pivotal.io/products/pivotal-function-service/
 VERSION="alpha v0.4.0"
 echo PivNet Download: PFS client
-om download-product -o /tmp -t $PIVNET_TOKEN -p pivotal-function-service --pivnet-file-glob='pfs-cli-linux-amd64-*' -v "$VERSION" 
+om download-product -t $OM_PIVNET_TOKEN -o /tmp -v $VERSION  -p pivotal-function-service --pivnet-file-glob='pfs-cli-linux-amd64-*'
 mv /tmp/pfs-cli-linux-amd64-* $PROJ_DIR/bin/pfs
 chmod a+x $PROJ_DIR/bin/pfs
 
-om download-product -o /tmp -t $PIVNET_TOKEN -p pivotal-function-service --pivnet-file-glob='duffle-linux-*' -v "$VERSION" 
+om download-product -t $OM_PIVNET_TOKEN -o /tmp -v $VERSION -p pivotal-function-service --pivnet-file-glob='duffle-linux-*' 
 mv /tmp/duffle-linux-* $PROJ_DIR/bin/duffle
 chmod a+x $PROJ_DIR/bin/duffle
 
@@ -185,21 +184,21 @@ EOF
 # Get updated url at https://network.pivotal.io/products/p-scheduler
 VERSION=1.2.28
 echo PivNet Download: Scheduler CF CLI Plugin
-om download-product --pivnet-file-glob='scheduler-for-pcf-cliplugin-linux64-binary-*'  -v $VERSION  -t $PIVNET_TOKEN -p p-scheduler -o /tmp
+om download-product -t $OM_PIVNET_TOKEN -o /tmp -v $VERSION -p p-scheduler --pivnet-file-glob='scheduler-for-pcf-cliplugin-linux64-binary-*'
 cf install-plugin -f /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
 rm /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
    
 # Get updated url at https://network.pivotal.io/products/pcf-app-autoscaler
 VERSION=2.0.199
 echo PivNet Download: App Autoscaler CF CLI Plugin
-om download-product --pivnet-file-glob='autoscaler-for-pcf-cliplugin-linux64-binary-*' -v $VERSION  -t $PIVNET_TOKEN -p pcf-app-autoscaler -o /tmp
+om download-product -t $OM_PIVNET_TOKEN -o /tmp -v $VERSION  -p pcf-app-autoscaler --pivnet-file-glob='autoscaler-for-pcf-cliplugin-linux64-binary-*'
 cf install-plugin -f /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
 rm /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
 
 # Get updated url at https://network.pivotal.io/products/p-event-alerts
 VERSION=1.2.8
 echo PivNet Download: Event Alerts CF CLI Plugin
-om download-product --pivnet-file-glob='pcf-event-alerts-cli-plugin-linux64-binary-*' -v $VERSION -t $PIVNET_TOKEN -p p-event-alerts -o /tmp
+om download-product -t $OM_PIVNET_TOKEN -o /tmp -v $VERSION  -p p-event-alerts --pivnet-file-glob='pcf-event-alerts-cli-plugin-linux64-binary-*'
 cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 
