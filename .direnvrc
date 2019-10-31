@@ -6,7 +6,15 @@
 #   use pcf-pas
 #   use pcf-pks
 # To use just append content to your $HOME/.direnvrc. You may use following command to do same
-# wget -qO - "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/direnvrc" >> $HOME/.direnvrc
+# wget -qO - "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/.direnvrc" >> $HOME/.direnvrc
+
+use_python() {
+    if [ -n "$(which pyenv)" ]; then
+        local pyversion=$1
+        pyenv local ${pyversion}
+    fi
+}
+
 use_docker-machine(){
   local env=${1:-default}
   echo Docker machine: $env
