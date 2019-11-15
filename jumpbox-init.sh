@@ -84,6 +84,11 @@ echo Downloading: kubectl
 wget -q $URL -O $PROJ_DIR/bin/kubectl
 chmod a+x $PROJ_DIR/bin/kubectl
 
+# Get updated url at https://github.com/buildpack/pack/releases/latest
+URL=https://github.com/buildpack/pack/releases/download/v0.5.0/pack-v0.5.0-linux.tgz
+echo Downloading: pack
+wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx pack
+chmod a+x $PROJ_DIR/bin/pack
 
 # Get updated url at https://download.docker.com/linux/static/stable/x86_64/
 URL="https://download.docker.com/linux/static/stable/x86_64/docker-19.03.3.tgz"
