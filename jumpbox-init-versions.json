@@ -5,4 +5,5 @@
   "pcf-autoscaler": "2.0.199",
   "p-event-alerts": "1.2.8",
   "terraform": "0.11.11",
+  "riff": "v0.4.0"
 }

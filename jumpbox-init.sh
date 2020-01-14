@@ -70,13 +70,13 @@ wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx fly
 chmod a+x $PROJ_DIR/bin/fly
 
 # Get updated url at https://github.com/pivotal-cf/om/releases/latest
-URL="$(github_asset pivotal-cf/om linux)"
+URL="$(github_asset pivotal-cf/om om-linux.\*tar.gz\$)"
 echo Downloading: om
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx om
 chmod a+x $PROJ_DIR/bin/om
 
 # Get updated url at https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/latest
-URL="$(github_asset cloudfoundry-incubator/bosh-backup-and-restore linux-amd64)"
+URL="$(github_asset cloudfoundry-incubator/bosh-backup-and-restore bbr-.\*-linux-amd64\$)"
 echo Downloading: bbr
 wget -q $URL -O $PROJ_DIR/bin/bbr
 chmod a+x $PROJ_DIR/bin/bbr
@@ -90,7 +90,7 @@ wget -q $URL  -O- | tar -C $PROJ_DIR/bin -zx cf
 chmod a+x $PROJ_DIR/bin/cf
 
 # Get updated url at https://github.com/cloudfoundry-incubator/credhub-cli/releases/latest
-URL="$(github_asset cloudfoundry-incubator/credhub-cli linux)"
+URL="$(github_asset cloudfoundry-incubator/credhub-cli credhub-linux-.\*.tgz\$)"
 echo Downloading: credhub
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz  ./credhub
 chmod a+x $PROJ_DIR/bin/credhub
@@ -103,8 +103,8 @@ echo Downloading: kubectl
 wget -q $URL -O $PROJ_DIR/bin/kubectl
 chmod a+x $PROJ_DIR/bin/kubectl
 
-# Get updated url at https://github.com/buildpack/pack/releases/latest
-URL="$(github_asset  buildpack/pack linux)"
+# Get updated url at https://github.com/buildpacks/pack/releases/latest
+URL="$(github_asset  buildpacks/pack pack-v.\*-linux.tgz\$)"
 echo Downloading: pack
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx pack
 chmod a+x $PROJ_DIR/bin/pack
@@ -133,13 +133,14 @@ chmod a+x $PROJ_DIR/bin/texplate
 
 
 # Get updated url at https://github.com/docker/compose/releases/latest
-URL="$(github_asset docker/compose $(uname -s)-$(uname -m))"
+URL="$(github_asset docker/compose $(uname -s)-$(uname -m)\$)"
 echo Downloading: docker-compose
 wget -q $URL -O $PROJ_DIR/bin/docker-compose
 chmod a+x $PROJ_DIR/bin/docker-compose
 
 # Get updated url at https://github.com/projectriff/riff/releases/latest
-URL="$(github_asset projectriff/riff linux-amd64)"
+VERSION=v0.4.0
+URL="$(github_asset projectriff/cli  linux-amd64 tags/$VERSION)"
 echo Downloading: riff
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz ./riff
 chmod a+x $PROJ_DIR/bin/riff
