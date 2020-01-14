@@ -64,7 +64,7 @@ chmod a+x $PROJ_DIR/bin/bbl
 
 
 # Get updated url at https://github.com/concourse/concourse/releases/latest
-URL="$(github_asset concourse/concourse linux-amd64)"
+URL="$(github_asset concourse/concourse fly.\*linux-amd64.tgz\$)"
 echo Downloading: fly
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx fly
 chmod a+x $PROJ_DIR/bin/fly
