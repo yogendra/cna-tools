@@ -2,7 +2,7 @@
 # Set 2 Environment variables
 #  PROJ_DIR : Project Directory. All tools will get install under PROJ_DIR/bin. (defaults: /usr/local)
 #  OM_PIVNET_TOKEN: Pivotal Network Token (required) Its **NOT** ending with -r. It looks like DJHASLD7_HSDHA7
-# Run 
+# Run
 # wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 bash
 # Or to put binaries at your preferred location (example: /home/me/bin), provide PROD_DIR
 # wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/home/yrampuria bash
@@ -45,40 +45,40 @@ URL="$(github_asset cloudfoundry/bosh-cli linux-amd64)"
 set -e
 echo Downloading: bosh
 wget -q $URL -O $PROJ_DIR/bin/bosh
-chmod a+x $PROJ_DIR/bin/bosh 
+chmod a+x $PROJ_DIR/bin/bosh
 
 # Get updated url at https://www.terraform.io/downloads.html
 URL="https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip"
 #URL="https://releases.hashicorp.com/terraform/0.12.19/terraform_0.12.19_linux_amd64.zip"
 echo Downloading: terraform
 wget -q $URL -O /tmp/terraform.zip
-gunzip -S .zip /tmp/terraform.zip 
+gunzip -S .zip /tmp/terraform.zip
 mv /tmp/terraform $PROJ_DIR/bin/terraform
-chmod a+x $PROJ_DIR/bin/terraform 
+chmod a+x $PROJ_DIR/bin/terraform
 
 # Get updated url at https://github.com/cloudfoundry/bosh-bootloader/releases/latest
 URL="$(github_asset cloudfoundry/bosh-bootloader linux_x86-64)"
 echo Downloading: bbl
 wget -q $URL -O $PROJ_DIR/bin/bbl
-chmod a+x $PROJ_DIR/bin/bbl 
+chmod a+x $PROJ_DIR/bin/bbl
 
 
 # Get updated url at https://github.com/concourse/concourse/releases/latest
 URL="$(github_asset concourse/concourse linux-amd64)"
 echo Downloading: fly
-wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx fly  
+wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx fly
 chmod a+x $PROJ_DIR/bin/fly
 
 # Get updated url at https://github.com/pivotal-cf/om/releases/latest
 URL="$(github_asset pivotal-cf/om linux)"
 echo Downloading: om
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx om
-chmod a+x $PROJ_DIR/bin/om 
+chmod a+x $PROJ_DIR/bin/om
 
 # Get updated url at https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/latest
-URL="$($(github_asset cloudfoundry-incubator/bosh-backup-and-restore linux-amd64)"
+URL="$(github_asset cloudfoundry-incubator/bosh-backup-and-restore linux-amd64)"
 echo Downloading: bbr
-wget -q $URL -O $PROJ_DIR/bin/bbr 
+wget -q $URL -O $PROJ_DIR/bin/bbr
 chmod a+x $PROJ_DIR/bin/bbr
 
 # Always updated version :D
@@ -86,11 +86,11 @@ chmod a+x $PROJ_DIR/bin/bbr
 VERSION=$(curl -s https://api.github.com/repos/cloudfoundry/cli/releases/latest  | jq -r '.tag_name' | sed s/^v// )
 URL="https://packages.cloudfoundry.org/stable?release=linux64-binary&version=$VERSION&source=github-rel"
 echo Downloading: cf
-wget -q $URL  -O- | tar -C $PROJ_DIR/bin -zx cf  
-chmod a+x $PROJ_DIR/bin/cf 
+wget -q $URL  -O- | tar -C $PROJ_DIR/bin -zx cf
+chmod a+x $PROJ_DIR/bin/cf
 
 # Get updated url at https://github.com/cloudfoundry-incubator/credhub-cli/releases/latest
-URL="$(github_asset cloudfoundry-incubator/credhub-cli linux)" 
+URL="$(github_asset cloudfoundry-incubator/credhub-cli linux)"
 echo Downloading: credhub
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz  ./credhub
 chmod a+x $PROJ_DIR/bin/credhub
@@ -104,7 +104,7 @@ wget -q $URL -O $PROJ_DIR/bin/kubectl
 chmod a+x $PROJ_DIR/bin/kubectl
 
 # Get updated url at https://github.com/buildpack/pack/releases/latest
-URL=$(github_asset  buildpack/pack linux)
+URL="$(github_asset  buildpack/pack linux)"
 echo Downloading: pack
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx pack
 chmod a+x $PROJ_DIR/bin/pack
@@ -171,7 +171,7 @@ om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION"  -p pivotal-func
 mv /tmp/pfs-cli-linux-amd64-* $PROJ_DIR/bin/pfs
 chmod a+x $PROJ_DIR/bin/pfs
 
-om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION" -p pivotal-function-service --pivnet-file-glob='duffle-linux-*' 
+om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION" -p pivotal-function-service --pivnet-file-glob='duffle-linux-*'
 mv /tmp/duffle-linux-* $PROJ_DIR/bin/duffle
 chmod a+x $PROJ_DIR/bin/duffle
 
@@ -184,7 +184,7 @@ chmod a+x  $PROJ_DIR/bin/bat
 
 
 # Get updated url at https://github.com/direnv/direnv/releases/latest
-URL="$(github_asset direnv/direnv linux-amd64"
+URL="$(github_asset direnv/direnv linux-amd64)"
 echo Downloading: direnv
 wget -q  $URL -O $PROJ_DIR/bin/direnv
 chmod a+x $PROJ_DIR/bin/direnv
@@ -207,7 +207,7 @@ echo PivNet Download: Scheduler CF CLI Plugin
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION" -p p-scheduler --pivnet-file-glob='scheduler-for-pcf-cliplugin-linux64-binary-*'
 cf install-plugin -f /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
 rm /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
-   
+
 # Get updated url at https://network.pivotal.io/products/pcf-app-autoscaler
 VERSION=2.0.199
 echo PivNet Download: App Autoscaler CF CLI Plugin
@@ -224,7 +224,7 @@ rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 
 
 mkdir -p .vim/autoload
-wget -q "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" -O $HOME/.vim/autoload/plug.vim 
+wget -q "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" -O $HOME/.vim/autoload/plug.vim
 wget -q "${GIST}/raw/.vimrc" -O $HOME/.vimrc
 
 echo Setting TMUX
