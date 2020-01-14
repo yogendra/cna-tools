@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-echo 1
 # Set 2 Environment variables
 #  PROJ_DIR : Project Directory. All tools will get install under PROJ_DIR/bin. (defaults: /usr/local)
 #  OM_PIVNET_TOKEN: Pivotal Network Token (required) Its **NOT** ending with -r. It looks like DJHASLD7_HSDHA7
@@ -117,7 +116,7 @@ chmod a+x $PROJ_DIR/bin/docker
 rm -rf /tmp/docker
 
 # Get updated url at https://github.com/docker/machine/releases/latest
-URL="$(github_asset docker/machine Linux-x86_64)"
+URL="$(github_asset docker/machine $(uname -s)-$(uname -m))"
 echo Downloading: docker-machine
 wget -q $URL  -O $PROJ_DIR/bin/docker-machine
 chmod a+x $PROJ_DIR/bin/docker-machine
@@ -131,32 +130,32 @@ chmod a+x $PROJ_DIR/bin/texplate
 
 
 # Get updated url at https://github.com/docker/compose/releases/latest
-URL="https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)"
+URL="$(github_asset docker/compose $(uname -s)-$(uname -m))"
 echo Downloading: docker-compose
 wget -q $URL -O $PROJ_DIR/bin/docker-compose
 chmod a+x $PROJ_DIR/bin/docker-compose
 
 # Get updated url at https://github.com/projectriff/riff/releases/latest
-URL="https://github.com/projectriff/riff/releases/download/v0.4.0/riff-linux-amd64.tgz"
+URL="$(github_asset projectriff/riff linux-amd64)"
 echo Downloading: riff
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz ./riff
 chmod a+x $PROJ_DIR/bin/riff
 
-# Get updated url at https://github.com/cloudfoundry-incubator/uaa-cli/releases/tag/0.8.0
-URL="https://github.com/cloudfoundry-incubator/uaa-cli/releases/download/0.8.0/uaa-linux-amd64-0.8.0"
+# Get updated url at https://github.com/cloudfoundry-incubator/uaa-cli/releases/latest
+URL="$(github_asset cloudfoundry-incubator/uaa-cli linux-amd64)"
 echo Downloading: uaa
 wget -q $URL -O $PROJ_DIR/bin/uaa
 chmod a+x $PROJ_DIR/bin/uaa
 
 
 # Get updated url at https://github.com/pivotal-cf/pivnet-cli/releases/latest
-URL="https://github.com/pivotal-cf/pivnet-cli/releases/download/v0.0.77/pivnet-linux-amd64-0.0.77"
+URL="$(github_asset pivotal-cf/pivnet-cli linux-amd64)"
 echo Downloading: pivnet
 wget -q $URL -O $PROJ_DIR/bin/pivnet
 chmod a+x $PROJ_DIR/bin/pivnet
 
 # Get updated url at https://network.pivotal.io/products/pivotal-container-service/
-VERSION=1.5.1
+VERSION=1.6.1
 echo PivNet Download: PKS client
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION"  -p pivotal-container-service --pivnet-file-glob='pks-linux-amd64-*'
 mv /tmp/pks-linux-amd64-* $PROJ_DIR/bin/pks
@@ -174,15 +173,15 @@ mv /tmp/duffle-linux-* $PROJ_DIR/bin/duffle
 chmod a+x $PROJ_DIR/bin/duffle
 
 # Get updated url at https://github.com/sharkdp/bat/releases/latest
-URL=https://github.com/sharkdp/bat/releases/download/v0.12.1/bat-v0.12.1-x86_64-unknown-linux-gnu.tar.gz
+URL="$(github_asset  sharkdp/bat linux-gnu)"
 echo Downloading: bat
-wget -q  $URL -O- | tar -C /tmp -xz bat-v0.12.1-x86_64-unknown-linux-gnu/bat
+wget -q  $URL -O- | tar -C /tmp -xz bat-*-x86_64-unknown-linux-gnu/bat
 mv /tmp/bat-*/bat $PROJ_DIR/bin/bat
 chmod a+x  $PROJ_DIR/bin/bat
 
 
 # Get updated url at https://github.com/direnv/direnv/releases/latest
-URL="https://github.com/direnv/direnv/releases/download/v2.20.0/direnv.linux-amd64"
+URL="$(github_asset direnv/direnv linux-amd64"
 echo Downloading: direnv
 wget -q  $URL -O $PROJ_DIR/bin/direnv
 chmod a+x $PROJ_DIR/bin/direnv
@@ -238,9 +237,8 @@ cat <<EOF
 SSH Config
 ========================================================================
 To generate new keys and setup passwordless login run:
-ssh-keygen  -q -t rsa -N ""
-ssh-keygen  -q -t dsa -N ""
-cat ~/.ssh/*.pub >> $HOME/.ssh/authorized_keys
+[ ! -f $HOME/.ssh/id_rsa ] && ssh-keygen  -q -t rsa -N "" && cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys
+[ ! -f $HOME/.ssh/id_dsa ] && ssh-keygen  -q -t dsa -N "" && cat $HOME/.ssh/id_dsa.pub >> $HOME/.ssh/authorized_keys
 EOF
 
 
