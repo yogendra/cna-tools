@@ -7,6 +7,8 @@
 # Or to put binaries at your preferred location (example: /home/me/bin), provide PROD_DIR
 # wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/home/yrampuria bash
 PROJ_DIR=${PROJ_DIR:-/usr/local}
+export PATH=$PATH:$PROJ_DIR/bin
+
 OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
 [[ -z $OM_PIVNET_TOKEN ]] && echo "OM_PIVNET_TOKEN environment variable not set. See instructions at https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec#jumpbox-init-sh" && exit 1
 echo PROJ_DIR=$PROJ_DIR
