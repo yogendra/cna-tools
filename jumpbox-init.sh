@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+echo 1
 # Set 2 Environment variables
 #  PROJ_DIR : Project Directory. All tools will get install under PROJ_DIR/bin. (defaults: /usr/local)
 #  OM_PIVNET_TOKEN: Pivotal Network Token (required) Its **NOT** ending with -r. It looks like DJHASLD7_HSDHA7
@@ -15,7 +16,7 @@ GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
 
 cat <<EOF
 ========================================================================
-General Instrucations
+General Instructions
 ========================================================================
   Add following line to .profile/.bash_profile
   export PATH=$PROJ_DIR/bin:\$PATH
@@ -23,8 +24,22 @@ General Instrucations
 ========================================================================
 EOF
 
+# Get updated url at "https://github.com/stedolan/jq/releases/latest
+VERSION=$(curl -s https://api.github.com/repos/stedolan/jq/releases/latest | grep tag_name | sed -E  's/.*: "(.*)",/\1/')
+URL="https://github.com/stedolan/jq/releases/download/$VERSION/jq-linux64"
+echo Downloading: jq
+wget -q $URL -O $PROJ_DIR/bin/jq
+chmod a+x $PROJ_DIR/bin/jq
+
+function github_asset {
+    REPO=$1
+    EXPRESSION="${2:-linux}"
+    TAG="${3:-latest}"
+    curl -s https://api.github.com/repos/$REPO/releases/$TAG | jq -r ".assets[] | select(.name|test(\"$EXPRESSION\"))|.browser_download_url"
+}
+
 # Get updated url at https://github.com/cloudfoundry/bosh-cli/releases/latest
-URL="https://github.com/cloudfoundry/bosh-cli/releases/download/v6.1.0/bosh-cli-6.1.0-linux-amd64"
+URL="$(github_asset cloudfoundry/bosh-cli linux-amd64)"
 set -e
 echo Downloading: bosh
 wget -q $URL -O $PROJ_DIR/bin/bosh
@@ -32,6 +47,7 @@ chmod a+x $PROJ_DIR/bin/bosh
 
 # Get updated url at https://www.terraform.io/downloads.html
 URL="https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip"
+#URL="https://releases.hashicorp.com/terraform/0.12.19/terraform_0.12.19_linux_amd64.zip"
 echo Downloading: terraform
 wget -q $URL -O /tmp/terraform.zip
 gunzip -S .zip /tmp/terraform.zip 
@@ -39,39 +55,40 @@ mv /tmp/terraform $PROJ_DIR/bin/terraform
 chmod a+x $PROJ_DIR/bin/terraform 
 
 # Get updated url at https://github.com/cloudfoundry/bosh-bootloader/releases/latest
-URL="https://github.com/cloudfoundry/bosh-bootloader/releases/download/v8.3.1/bbl-v8.3.1_linux_x86-64" 
+URL="$(github_asset cloudfoundry/bosh-bootloader linux_x86-64)
 echo Downloading: bbl
 wget -q $URL -O $PROJ_DIR/bin/bbl
 chmod a+x $PROJ_DIR/bin/bbl 
 
 
 # Get updated url at https://github.com/concourse/concourse/releases/latest
-URL="https://github.com/concourse/concourse/releases/download/v5.6.0/fly-5.6.0-linux-amd64.tgz" 
+URL="$(github_asset concourse/concourse linux-amd64)"
 echo Downloading: fly
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx fly  
 chmod a+x $PROJ_DIR/bin/fly
 
 # Get updated url at https://github.com/pivotal-cf/om/releases/latest
-URL="https://github.com/pivotal-cf/om/releases/download/4.2.0/om-linux-4.2.0.tar.gz" 
+URL="$(github_asset pivotal-cf/om linux)"
 echo Downloading: om
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx om
 chmod a+x $PROJ_DIR/bin/om 
 
 # Get updated url at https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/latest
-URL="https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/download/v1.5.2/bbr-1.5.2-linux-amd64"
+URL="$($(github_asset cloudfoundry-incubator/bosh-backup-and-restore linux-amd64)"
 echo Downloading: bbr
 wget -q $URL -O $PROJ_DIR/bin/bbr 
 chmod a+x $PROJ_DIR/bin/bbr
 
 # Always updated version :D
-# Get updated url at https://docs.cloudfoundry.org/cf-cli/install-go-cli.html#pkg-linux
-URL="https://packages.cloudfoundry.org/stable?release=linux64-binary&version=6.47.0&source=github-rel"
+# Get updated url at https://github.com/cloudfoundry/cli/releases/latest
+VERSION=$(curl -s https://api.github.com/repos/cloudfoundry/cli/releases/latest  | jq -r '.tag_name' | sed s/^v// )
+URL="https://packages.cloudfoundry.org/stable?release=linux64-binary&version=$VERSION&source=github-rel"
 echo Downloading: cf
 wget -q $URL  -O- | tar -C $PROJ_DIR/bin -zx cf  
 chmod a+x $PROJ_DIR/bin/cf 
 
 # Get updated url at https://github.com/cloudfoundry-incubator/credhub-cli/releases/latest
-URL="https://github.com/cloudfoundry-incubator/credhub-cli/releases/download/2.6.0/credhub-linux-2.6.0.tgz" 
+URL="$(github_asset cloudfoundry-incubator/credhub-cli linux)" 
 echo Downloading: credhub
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz  ./credhub
 chmod a+x $PROJ_DIR/bin/credhub
@@ -85,13 +102,14 @@ wget -q $URL -O $PROJ_DIR/bin/kubectl
 chmod a+x $PROJ_DIR/bin/kubectl
 
 # Get updated url at https://github.com/buildpack/pack/releases/latest
-URL=https://github.com/buildpack/pack/releases/download/v0.5.0/pack-v0.5.0-linux.tgz
+URL=$(github_asset  buildpack/pack linux)
 echo Downloading: pack
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx pack
 chmod a+x $PROJ_DIR/bin/pack
 
 # Get updated url at https://download.docker.com/linux/static/stable/x86_64/
-URL="https://download.docker.com/linux/static/stable/x86_64/docker-19.03.3.tgz"
+VERSION=$(curl -s https://api.github.com/repos/docker/docker-ce/releases/latest  | jq -r '.tag_name'   | sed s/^v//)
+URL="https://download.docker.com/linux/static/stable/x86_64/docker-$VERSION.tgz"
 echo Downloading: docker
 wget -q $URL -O- | tar -C /tmp -xz  docker/docker
 mv /tmp/docker/docker $PROJ_DIR/bin/docker
@@ -99,19 +117,14 @@ chmod a+x $PROJ_DIR/bin/docker
 rm -rf /tmp/docker
 
 # Get updated url at https://github.com/docker/machine/releases/latest
-URL="https://github.com/docker/machine/releases/download/v0.16.2/docker-machine-$(uname -s)-$(uname -m)"
+URL="$(github_asset docker/machine Linux-x86_64)"
 echo Downloading: docker-machine
 wget -q $URL  -O $PROJ_DIR/bin/docker-machine
 chmod a+x $PROJ_DIR/bin/docker-machine
 
-# Get updated url at "https://github.com/stedolan/jq/releases/latest
-URL="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
-echo Downloading: jq
-wget -q $URL -O $PROJ_DIR/bin/jq
-chmod a+x $PROJ_DIR/bin/jq
 
 # Get updated url at "https://github.com/pivotal-cf/texplate/releases/latest
-URL="https://github.com/pivotal-cf/texplate/releases/download/v0.3.0/texplate_linux_amd64"
+URL="$(github_asset  pivotal-cf/texplate linux_amd64)"
 echo Downloading: texplate
 wget -q $URL -O $PROJ_DIR/bin/texplate
 chmod a+x $PROJ_DIR/bin/texplate
@@ -137,7 +150,7 @@ chmod a+x $PROJ_DIR/bin/uaa
 
 
 # Get updated url at https://github.com/pivotal-cf/pivnet-cli/releases/latest
-URL="https://github.com/pivotal-cf/pivnet-cli/releases/download/v0.0.68/pivnet-linux-amd64-0.0.68"
+URL="https://github.com/pivotal-cf/pivnet-cli/releases/download/v0.0.77/pivnet-linux-amd64-0.0.77"
 echo Downloading: pivnet
 wget -q $URL -O $PROJ_DIR/bin/pivnet
 chmod a+x $PROJ_DIR/bin/pivnet
