@@ -31,6 +31,7 @@ URL="https://github.com/stedolan/jq/releases/download/$VERSION/jq-linux64"
 echo Downloading: jq
 wget -q $URL -O $PROJ_DIR/bin/jq
 chmod a+x $PROJ_DIR/bin/jq
+alias jq=$PROJ_DIR/bin/jq
 
 function github_asset {
     REPO=$1
