@@ -57,7 +57,7 @@ mv /tmp/terraform $PROJ_DIR/bin/terraform
 chmod a+x $PROJ_DIR/bin/terraform 
 
 # Get updated url at https://github.com/cloudfoundry/bosh-bootloader/releases/latest
-URL="$(github_asset cloudfoundry/bosh-bootloader linux_x86-64)
+URL="$(github_asset cloudfoundry/bosh-bootloader linux_x86-64)"
 echo Downloading: bbl
 wget -q $URL -O $PROJ_DIR/bin/bbl
 chmod a+x $PROJ_DIR/bin/bbl 
