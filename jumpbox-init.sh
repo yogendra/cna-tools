@@ -169,7 +169,7 @@ wget -q $URL -O $PROJ_DIR/bin/pivnet
 chmod a+x $PROJ_DIR/bin/pivnet
 
 # Get updated url at https://network.pivotal.io/products/pivotal-container-service/
-VERSION=$(asset_version pivotal_container_service)
+VERSION=$(asset_version pivotal-container-service)
 echo PivNet Download: PKS client $VERSION
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION"  -p pivotal-container-service --pivnet-file-glob='pks-linux-amd64-*'
 mv /tmp/pks-linux-amd64-* $PROJ_DIR/bin/pks
