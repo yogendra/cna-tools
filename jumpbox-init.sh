@@ -195,7 +195,7 @@ wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz ./riff
 chmod a+x $PROJ_DIR/bin/riff
 
 # Get updated url at https://github.com/sharkdp/bat/releases/latest
-URL="$(github_asset  sharkdp/bat linux-gnu)"
+URL="$(github_asset  sharkdp/bat x86_64-unknown-linux-gnu)"
 echo Downloading: bat from $URL
 wget -q  $URL -O- | tar -C /tmp -xz bat-*-x86_64-unknown-linux-gnu/bat
 mv /tmp/bat-*/bat $PROJ_DIR/bin/bat
