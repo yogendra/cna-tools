@@ -11,7 +11,7 @@
 PROJ_DIR=${PROJ_DIR:-/usr/local}
 export PATH=$PATH:$PROJ_DIR/bin
 function log {
-  echo "$@"  1>&2
+  echo $*  1>&2
 }
 
 OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
@@ -35,7 +35,7 @@ EOF
 # Get updated url at "https://github.com/stedolan/jq/releases/latest
 VERSION=$(curl -s https://api.github.com/repos/stedolan/jq/releases/latest | grep tag_name | sed -E  's/.*: "(.*)",/\1/')
 URL="https://github.com/stedolan/jq/releases/download/$VERSION/jq-linux64"
-log Downloading: jq
+log Downloading: jq from $URL $VERSIONqq
 wget -q $URL -O $PROJ_DIR/bin/jq
 chmod a+x $PROJ_DIR/bin/jq
 alias jq=$PROJ_DIR/bin/jq
