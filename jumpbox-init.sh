@@ -19,17 +19,11 @@ log PROJ_DIR=$PROJ_DIR
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
 VERSION_FILE_URL=${GIST}/raw/jumpbox-init-versions.json
 
-VERSION_JSON=""
+VERSION_JSON=$(wget -q $VERSION_FILE_URL -O-)
 
 function asset_version {
   ASSET_NAME=$1
-  if [[ -z $VERSION_JSON ]] ;
-  then
-    log Fetching Asset Version index from $VERSION_FILE_URL
-    VERSION_JSON=$(wget -q $VERSION_FILE_URL -O-)
-  fi
   echo $VERSION_JSON | jq -r ".$ASSET_NAME"
-  
 }
 
 
