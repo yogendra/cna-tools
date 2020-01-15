@@ -7,7 +7,6 @@
 # Or to put binaries at your preferred location (example: /home/me/bin), provide PROD_DIR
 # wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh?nocache"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/home/yrampuria bash
 
-set -e
 
 PROJ_DIR=${PROJ_DIR:-/usr/local}
 export PATH=$PATH:$PROJ_DIR/bin
@@ -20,12 +19,7 @@ OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
 log PROJ_DIR=$PROJ_DIR
 [[ -d $PROJ_DIR/bin ]]  || mkdir -p $PROJ_DIR/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
-VERSION_JSON=$(wget -q ${GIST}/raw/jumpbox-init-versions.json -O-)
 
-function asset_version {
-  ASSET_NAME=$1
-  echo $VERSION_JSON | jq -r ".$ASSET_NAME"
-}
 
 
 cat <<EOF
@@ -46,12 +40,20 @@ wget -q $URL -O $PROJ_DIR/bin/jq
 chmod a+x $PROJ_DIR/bin/jq
 alias jq=$PROJ_DIR/bin/jq
 
+VERSION_JSON=$(wget -q ${GIST}/raw/jumpbox-init-versions.json -O-)
+function asset_version {
+  ASSET_NAME=$1
+  echo $VERSION_JSON | jq -r ".$ASSET_NAME"
+}
+
 function github_asset {
     REPO=$1
     EXPRESSION="${2:-linux}"
     TAG="${3:-latest}"
     curl -s https://api.github.com/repos/$REPO/releases/$TAG | jq -r ".assets[] | select(.name|test(\"$EXPRESSION\"))|.browser_download_url"
 }
+
+set -e
 
 
 # Get updated url at https://github.com/cloudfoundry/bosh-cli/releases/latest
