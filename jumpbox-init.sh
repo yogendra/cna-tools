@@ -31,7 +31,7 @@ General Instructions
 
 ========================================================================
 EOF
-
+echo test0
 # Get updated url at "https://github.com/stedolan/jq/releases/latest
 VERSION=$(curl -s https://api.github.com/repos/stedolan/jq/releases/latest | grep tag_name | sed -E  's/.*: "(.*)",/\1/')
 URL="https://github.com/stedolan/jq/releases/download/$VERSION/jq-linux64"
@@ -39,26 +39,25 @@ log Downloading: jq
 wget -q $URL -O $PROJ_DIR/bin/jq
 chmod a+x $PROJ_DIR/bin/jq
 alias jq=$PROJ_DIR/bin/jq
-
+echo test1
 VERSION_JSON=$(wget -q ${GIST}/raw/jumpbox-init-versions.json -O-)
 function asset_version {
   ASSET_NAME=$1
   echo $VERSION_JSON | jq -r ".$ASSET_NAME"
 }
-
+echo test2
 function github_asset {
     REPO=$1
     EXPRESSION="${2:-linux}"
     TAG="${3:-latest}"
     curl -s https://api.github.com/repos/$REPO/releases/$TAG | jq -r ".assets[] | select(.name|test(\"$EXPRESSION\"))|.browser_download_url"
 }
-
+echo test3
 set -e
-
+echo test4
 
 # Get updated url at https://github.com/cloudfoundry/bosh-cli/releases/latest
 URL="$(github_asset cloudfoundry/bosh-cli linux-amd64)"
-
 log Downloading: bosh
 wget -q $URL -O $PROJ_DIR/bin/bosh
 chmod a+x $PROJ_DIR/bin/bosh
