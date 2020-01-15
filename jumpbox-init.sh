@@ -3,9 +3,9 @@
 #  PROJ_DIR : Project Directory. All tools will get install under PROJ_DIR/bin. (defaults: /usr/local)
 #  OM_PIVNET_TOKEN: Pivotal Network Token (required) Its **NOT** ending with -r. It looks like DJHASLD7_HSDHA7
 # Run
-# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 bash
+# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh?nocache"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 bash
 # Or to put binaries at your preferred location (example: /home/me/bin), provide PROD_DIR
-# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/home/yrampuria bash
+# wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh?nocache"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/home/yrampuria bash
 PROJ_DIR=${PROJ_DIR:-/usr/local}
 export PATH=$PATH:$PROJ_DIR/bin
 function log {
@@ -58,12 +58,6 @@ function github_asset {
     curl -s https://api.github.com/repos/$REPO/releases/$TAG | jq -r ".assets[] | select(.name|test(\"$EXPRESSION\"))|.browser_download_url"
 }
 
-# Get updated url at https://github.com/projectriff/riff/releases/latest
-VERSION=$(asset_version riff)
-URL="$(github_asset projectriff/cli  linux-amd64 tags/$VERSION)"
-log Downloading: riff
-wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz ./riff
-chmod a+x $PROJ_DIR/bin/riff
 
 # Get updated url at https://github.com/cloudfoundry/bosh-cli/releases/latest
 URL="$(github_asset cloudfoundry/bosh-cli linux-amd64)"
@@ -200,6 +194,14 @@ chmod a+x $PROJ_DIR/bin/pfs
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION" -p pivotal-function-service --pivnet-file-glob='duffle-linux-*'
 mv /tmp/duffle-linux-* $PROJ_DIR/bin/duffle
 chmod a+x $PROJ_DIR/bin/duffle
+
+
+# Get updated url at https://github.com/projectriff/riff/releases/latest
+VERSION=$(asset_version riff)
+URL="$(github_asset projectriff/cli  linux-amd64 tags/$VERSION)"
+log Downloading: riff
+wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz ./riff
+chmod a+x $PROJ_DIR/bin/riff
 
 # Get updated url at https://github.com/sharkdp/bat/releases/latest
 URL="$(github_asset  sharkdp/bat linux-gnu)"
