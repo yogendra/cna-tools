@@ -14,7 +14,7 @@ OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
 echo PROJ_DIR=$PROJ_DIR
 [[ -d $PROJ_DIR/bin ]]  || mkdir -p $PROJ_DIR/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
-VERSION_FILE_URL=${GIST}/raw/jumpbox-init-version.json
+VERSION_FILE_URL=${GIST}/raw/jumpbox-init-versions.json
 
 VERSION_JSON=""
 function asset_version {
