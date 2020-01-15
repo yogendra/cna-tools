@@ -15,6 +15,18 @@ echo PROJ_DIR=$PROJ_DIR
 [[ -d $PROJ_DIR/bin ]]  || mkdir -p $PROJ_DIR/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
 
+VERSION_JSON=""
+function asset_version {
+  ASSET_NAME=$1
+  if [[ -z $VERSION_JSON ]] ;
+  then
+    echo Fetching Asset Version index from $VERSION_FILE_URL
+    export VERSION_JSON=$(wget -q $VERSION_FILE -O-)
+  fi
+  echo $VERSION_JSON | jq -r ".$ASSET_NAME" 
+}
+
+
 cat <<EOF
 ========================================================================
 General Instructions
@@ -139,7 +151,7 @@ wget -q $URL -O $PROJ_DIR/bin/docker-compose
 chmod a+x $PROJ_DIR/bin/docker-compose
 
 # Get updated url at https://github.com/projectriff/riff/releases/latest
-VERSION=v0.4.0
+VERSION=$(asset_version riff)
 URL="$(github_asset projectriff/cli  linux-amd64 tags/$VERSION)"
 echo Downloading: riff
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz ./riff
@@ -159,14 +171,14 @@ wget -q $URL -O $PROJ_DIR/bin/pivnet
 chmod a+x $PROJ_DIR/bin/pivnet
 
 # Get updated url at https://network.pivotal.io/products/pivotal-container-service/
-VERSION=1.6.1
+VERSION=$(asset_version pivotal_container_service)
 echo PivNet Download: PKS client
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION"  -p pivotal-container-service --pivnet-file-glob='pks-linux-amd64-*'
 mv /tmp/pks-linux-amd64-* $PROJ_DIR/bin/pks
 chmod a+x $PROJ_DIR/bin/pks
 
 # Get updated url at https://network.pivotal.io/products/pivotal-function-service/
-VERSION="alpha v0.4.0"
+VERSION="$(asset_version pivotal-function-service)"
 echo PivNet Download: PFS client
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION"  -p pivotal-function-service --pivnet-file-glob='pfs-cli-linux-amd64-*'
 mv /tmp/pfs-cli-linux-amd64-* $PROJ_DIR/bin/pfs
@@ -203,21 +215,21 @@ direnv: Additional Instrucations
 EOF
 
 # Get updated url at https://network.pivotal.io/products/p-scheduler
-VERSION=1.2.28
+VERSION=$(asset_version p-scheduler)
 echo PivNet Download: Scheduler CF CLI Plugin
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION" -p p-scheduler --pivnet-file-glob='scheduler-for-pcf-cliplugin-linux64-binary-*'
 cf install-plugin -f /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
 rm /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
 
 # Get updated url at https://network.pivotal.io/products/pcf-app-autoscaler
-VERSION=2.0.199
+VERSION=$(asset_version pcf-app-autoscaler)
 echo PivNet Download: App Autoscaler CF CLI Plugin
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION"  -p pcf-app-autoscaler --pivnet-file-glob='autoscaler-for-pcf-cliplugin-linux64-binary-*'
 cf install-plugin -f /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
 rm /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
 
 # Get updated url at https://network.pivotal.io/products/p-event-alerts
-VERSION=1.2.8
+VERSION=$(asset_version p-event-alerts)
 echo PivNet Download: Event Alerts CF CLI Plugin
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION"  -p p-event-alerts --pivnet-file-glob='pcf-event-alerts-cli-plugin-linux64-binary-*'
 cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
