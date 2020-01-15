@@ -21,10 +21,13 @@ function asset_version {
   ASSET_NAME=$1
   if [[ -z $VERSION_JSON ]] ;
   then
-    echo Fetching Asset Version index from $VERSION_FILE_URL
+    echo Fetching Asset Version index from $VERSION_FILE_URL 1>&2
     VERSION_JSON=$(wget -q $VERSION_FILE_URL -O-)
   fi
-  echo $VERSION_JSON | jq -r ".$ASSET_NAME" 
+  echo VERSION_JSON=$VERSION_JSON 1>&2
+  VERSION=$(echo $VERSION_JSON | jq -r ".$ASSET_NAME")
+  echo VERSION=$VERSION 1>&2
+  echo $VERSION
 }
 
 
@@ -52,6 +55,13 @@ function github_asset {
     TAG="${3:-latest}"
     curl -s https://api.github.com/repos/$REPO/releases/$TAG | jq -r ".assets[] | select(.name|test(\"$EXPRESSION\"))|.browser_download_url"
 }
+
+# Get updated url at https://github.com/projectriff/riff/releases/latest
+VERSION=$(asset_version riff)
+URL="$(github_asset projectriff/cli  linux-amd64 tags/$VERSION)"
+echo Downloading: riff
+wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz ./riff
+chmod a+x $PROJ_DIR/bin/riff
 
 # Get updated url at https://github.com/cloudfoundry/bosh-cli/releases/latest
 URL="$(github_asset cloudfoundry/bosh-cli linux-amd64)"
