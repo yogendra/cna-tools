@@ -14,6 +14,7 @@ OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
 echo PROJ_DIR=$PROJ_DIR
 [[ -d $PROJ_DIR/bin ]]  || mkdir -p $PROJ_DIR/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
+VERSION_FILE_URL=${GIST}/raw/jumpbox-init-version.json
 
 VERSION_JSON=""
 function asset_version {
@@ -21,7 +22,7 @@ function asset_version {
   if [[ -z $VERSION_JSON ]] ;
   then
     echo Fetching Asset Version index from $VERSION_FILE_URL
-    export VERSION_JSON=$(wget -q $VERSION_FILE -O-)
+    VERSION_JSON=$(wget -q $VERSION_FILE_URL -O-)
   fi
   echo $VERSION_JSON | jq -r ".$ASSET_NAME" 
 }
