@@ -6,6 +6,9 @@
 # wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh?nocache"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 bash
 # Or to put binaries at your preferred location (example: /home/me/bin), provide PROD_DIR
 # wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh?nocache"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/home/yrampuria bash
+
+set -e
+
 PROJ_DIR=${PROJ_DIR:-/usr/local}
 export PATH=$PATH:$PROJ_DIR/bin
 function log {
@@ -17,9 +20,7 @@ OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
 log PROJ_DIR=$PROJ_DIR
 [[ -d $PROJ_DIR/bin ]]  || mkdir -p $PROJ_DIR/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
-VERSION_FILE_URL=${GIST}/raw/jumpbox-init-versions.json
-
-VERSION_JSON=$(wget -q $VERSION_FILE_URL -O-)
+VERSION_JSON=$(wget -q ${GIST}/raw/jumpbox-init-versions.json -O-)
 
 function asset_version {
   ASSET_NAME=$1
@@ -55,7 +56,7 @@ function github_asset {
 
 # Get updated url at https://github.com/cloudfoundry/bosh-cli/releases/latest
 URL="$(github_asset cloudfoundry/bosh-cli linux-amd64)"
-set -e
+
 log Downloading: bosh
 wget -q $URL -O $PROJ_DIR/bin/bosh
 chmod a+x $PROJ_DIR/bin/bosh
