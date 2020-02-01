@@ -18,6 +18,7 @@ echo PROJ_DIR=${PROJ_DIR}
 GITHUB_OPTIONS=""
 [[ -d ${PROJ_DIR}/bin ]]  || mkdir -p ${PROJ_DIR}/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
+sudo ln -fs /usr/share/zoneinfo/Asia/Singapore /etc/localtime
 
 echo Install basic tools for the jumpbox
 OS_TOOLS=(\
