@@ -242,23 +242,23 @@ wget -q "${GIST}/raw/.direnvrc" -O ${HOME}/.direnvrc
 # Get updated url at https://network.pivotal.io/products/p-scheduler
 VERSION=$(asset_version p-scheduler)
 echo PivNet Download: Scheduler CF CLI Plugin ${VERSION}
-om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}" -p p-scheduler --pivnet-file-glob=scheduler-for-pcf-cliplugin-linux64-binary-${VERSION}\*
-cf install-plugin -f /tmp/scheduler-for-pcf-cliplugin-linux64-binary-${VERSION}*
-rm /tmp/scheduler-for-pcf-cliplugin-linux64-binary-${VERSION}*
+om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}" -p p-scheduler --pivnet-file-glob=scheduler-for-pcf-cliplugin-linux64-binary-\*
+cf install-plugin -f /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
+rm /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
 
 # Get updated url at https://network.pivotal.io/products/pcf-app-autoscaler
 VERSION=$(asset_version pcf-app-autoscaler)
 echo PivNet Download: App Autoscaler CF CLI Plugin ${VERSION}
-om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p pcf-app-autoscaler --pivnet-file-glob=autoscaler-for-pcf-cliplugin-linux64-binary-${VERSION}\*
-cf install-plugin -f /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-${VERSION}*
-rm /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-${VERSION}*
+om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p pcf-app-autoscaler --pivnet-file-glob=autoscaler-for-pcf-cliplugin-linux64-binary-\*
+cf install-plugin -f /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
+rm /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
 
 # Get updated url at https://network.pivotal.io/products/p-event-alerts
 VERSION=$(asset_version p-event-alerts)
 echo PivNet Download: Event Alerts CF CLI Plugin ${VERSION}
-om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p p-event-alerts --pivnet-file-glob=pcf-event-alerts-cli-plugin-linux64-binary-${VERSION}\*
-cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-${VERSION}*
-rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-${VERSION}*
+om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p p-event-alerts --pivnet-file-glob=pcf-event-alerts-cli-plugin-linux64-binary-\*
+cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
+rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 
 echo Installing Keybase cli
 curl --remote-name https://prerelease.keybase.io/keybase_amd64.deb
