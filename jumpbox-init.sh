@@ -273,8 +273,8 @@ echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud
 wget -qO- https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 
 # Update the package list and install the Cloud SDK
-sudo apt-get update
-sudo apt-get -qqy install google-cloud-sdk
+sudo apt update
+sudo apt -qqy install google-cloud-sdk
 
 
 echo Install aws client
