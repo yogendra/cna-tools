@@ -15,17 +15,51 @@ export PATH=${PATH}:${PROJ_DIR}/bin
 OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
 [[ -z ${OM_PIVNET_TOKEN} ]] && echo "OM_PIVNET_TOKEN environment variable not set. See instructions at https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec#jumpbox-init-sh" && exit 1
 echo PROJ_DIR=${PROJ_DIR}
+GITHUB_OPTIONS=""
 [[ -d ${PROJ_DIR}/bin ]]  || mkdir -p ${PROJ_DIR}/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
 
-
-# Get updated url at "https://github.com/stedolan/jq/releases/latest
-VERSION=$(wget -qO- https://api.github.com/repos/stedolan/jq/releases/latest | grep tag_name | sed -E  's/.*: "(.*)",/\1/')
-URL="https://github.com/stedolan/jq/releases/download/${VERSION}/jq-linux64"
-echo Downloading: jq from ${URL} ${VERSION}
-wget -q ${URL} -O ${PROJ_DIR}/bin/jq
-chmod a+x ${PROJ_DIR}/bin/jq
-alias jq=${PROJ_DIR}/bin/jq
+echo Install basic tools for the jumpbox
+OS_TOOLS=(\
+    apt-transport-https \
+    build-essential \
+    bzip2 \
+    ca-certificates \
+    coreutils \
+    curl \
+    dnsutils \
+    file \
+    git \
+    gnupg2 \
+    hping3 \
+    httpie \
+    iperf \
+    iputils-ping \
+    iputils-tracepath \
+    jq \
+    less \
+    man \
+    mosh \
+    mtr \
+    netcat \
+    nmap \
+    python2.7-minimal \
+    python-pip \
+    rclone \
+    screen \
+    shellcheck \
+    software-properties-common \
+    tcpdump \
+    tmate \
+    tmux \
+    traceroute \
+    unzip \
+    vim \
+    wamerican \
+    wget \
+    whois \
+    )
+  sudo apt-get install -qqy "${OS_TOOLS[@]}"
 
 VERSION_JSON=$(wget ${GITHUB_OPTIONS} -qO- ${GIST}/raw/jumpbox-init-versions.json )
 function asset_version {
@@ -207,24 +241,28 @@ wget -q "${GIST}/raw/.direnvrc" -O ${HOME}/.direnvrc
 # Get updated url at https://network.pivotal.io/products/p-scheduler
 VERSION=$(asset_version p-scheduler)
 echo PivNet Download: Scheduler CF CLI Plugin ${VERSION}
-om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}" -p p-scheduler --pivnet-file-glob='scheduler-for-pcf-cliplugin-linux64-binary-*'
-cf install-plugin -f /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
+om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}" -p p-scheduler --pivnet-file-glob=scheduler-for-pcf-cliplugin-linux64-binary-${VERSION}
+cf install-plugin -f /tmp/scheduler-for-pcf-cliplugin-linux64-binary-${VERSION}
 rm /tmp/scheduler-for-pcf-cliplugin-linux64-binary-*
 
 # Get updated url at https://network.pivotal.io/products/pcf-app-autoscaler
 VERSION=$(asset_version pcf-app-autoscaler)
 echo PivNet Download: App Autoscaler CF CLI Plugin ${VERSION}
-om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p pcf-app-autoscaler --pivnet-file-glob='autoscaler-for-pcf-cliplugin-linux64-binary-*'
-cf install-plugin -f /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
-rm /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-*
+om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p pcf-app-autoscaler --pivnet-file-glob=autoscaler-for-pcf-cliplugin-linux64-binary-${VERSION}
+cf install-plugin -f /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-${VERSION}
+rm /tmp/autoscaler-for-pcf-cliplugin-linux64-binary-${VERSION}
 
 # Get updated url at https://network.pivotal.io/products/p-event-alerts
 VERSION=$(asset_version p-event-alerts)
 echo PivNet Download: Event Alerts CF CLI Plugin ${VERSION}
-om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p p-event-alerts --pivnet-file-glob='pcf-event-alerts-cli-plugin-linux64-binary-*'
-cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
-rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
+om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p p-event-alerts --pivnet-file-glob=pcf-event-alerts-cli-plugin-linux64-binary-${VERSION}
+cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-${VERSION}
+rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-${VERSION}
 
+echo Installing Keybase cli
+curl --remote-name https://prerelease.keybase.io/keybase_amd64.deb
+sudo apt install ./keybase_amd64.deb
+run_keybase
 
 echo Install google-cloud-sdk
 # Add the Cloud SDK distribution URI as a package source
@@ -239,8 +277,7 @@ sudo apt-get -qqy install google-cloud-sdk
 
 
 echo Install aws client
-sudo apt-get install unzip
-wget -q "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+wget -q "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -O "/tmp/awscliv2.zip"
 unzip /tmp/awscliv2.zip -d $PROJ_DIR
 rm -f /tmp/awscliv2.zip
 sudo $PROJ_DIR/aws/install
