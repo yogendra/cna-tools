@@ -58,8 +58,8 @@ wget -q $URL -O $PROJ_DIR/bin/bosh
 chmod a+x $PROJ_DIR/bin/bosh
 
 # Get updated url at https://www.terraform.io/downloads.html
-URL="https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip"
-#URL="https://releases.hashicorp.com/terraform/0.12.19/terraform_0.12.19_linux_amd64.zip"
+VERSION=$(asset_version terraform)
+URL="https://releases.hashicorp.com/terraform/$VERSION/terraform_$VERSION_linux_amd64.zip"
 echo Downloading: terraform from $URL
 wget -q $URL -O /tmp/terraform.zip
 gunzip -S .zip /tmp/terraform.zip
@@ -119,6 +119,13 @@ echo Downloading: pack from $URL
 wget -q $URL -O- | tar -C $PROJ_DIR/bin -zx pack
 chmod a+x $PROJ_DIR/bin/pack
 
+
+# Get updated url at "https://github.com/pivotal-cf/texplate/releases/latest
+URL="$(github_asset  pivotal-cf/texplate linux_amd64)"
+echo Downloading: texplate from $URL
+wget -q $URL -O $PROJ_DIR/bin/texplate
+chmod a+x $PROJ_DIR/bin/texplate
+
 # Get updated url at https://download.docker.com/linux/static/stable/x86_64/
 VERSION=$(curl -s https://api.github.com/repos/docker/docker-ce/releases/latest  | jq -r '.tag_name'   | sed s/^v//)
 URL="https://download.docker.com/linux/static/stable/x86_64/docker-$VERSION.tgz"
@@ -133,14 +140,6 @@ URL="$(github_asset docker/machine $(uname -s)-$(uname -m))"
 echo Downloading: docker-machine from $URL
 wget -q $URL  -O $PROJ_DIR/bin/docker-machine
 chmod a+x $PROJ_DIR/bin/docker-machine
-
-
-# Get updated url at "https://github.com/pivotal-cf/texplate/releases/latest
-URL="$(github_asset  pivotal-cf/texplate linux_amd64)"
-echo Downloading: texplate from $URL
-wget -q $URL -O $PROJ_DIR/bin/texplate
-chmod a+x $PROJ_DIR/bin/texplate
-
 
 # Get updated url at https://github.com/docker/compose/releases/latest
 URL="$(github_asset docker/compose $(uname -s)-$(uname -m)\$)"
@@ -195,11 +194,13 @@ wget -q $URL -O- | tar -C $PROJ_DIR/bin -xz ./riff
 chmod a+x $PROJ_DIR/bin/riff
 
 # Get updated url at https://github.com/sharkdp/bat/releases/latest
-URL="$(github_asset  sharkdp/bat x86_64-unknown-linux-gnu)"
+VERSION=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest  | jq -r '.tag_name'  )
+URL="$(github_asset  sharkdp/bat x86_64-unknown-linux-gnu tags/$VERSION)"
 echo Downloading: bat from $URL
-wget -q  $URL -O- | tar -C /tmp -xz bat-*-x86_64-unknown-linux-gnu/bat
-mv /tmp/bat-*/bat $PROJ_DIR/bin/bat
+wget -q  $URL -O- | tar -C /tmp -xz bat-$VERSION-x86_64-unknown-linux-gnu/bat
+mv /tmp/bat-$VERSION-x86_64-unknown-linux-gnu/bat $PROJ_DIR/bin/bat
 chmod a+x  $PROJ_DIR/bin/bat
+rm -rf /tmp/bat-$VERSION-x86_64-unknown-linux-gnu
 
 
 # Get updated url at https://github.com/direnv/direnv/releases/latest
@@ -240,6 +241,7 @@ echo PivNet Download: Event Alerts CF CLI Plugin $VERSION
 om download-product -t "$OM_PIVNET_TOKEN" -o /tmp -v "$VERSION"  -p p-event-alerts --pivnet-file-glob='pcf-event-alerts-cli-plugin-linux64-binary-*'
 cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
+
 
 
 mkdir -p .vim/autoload
