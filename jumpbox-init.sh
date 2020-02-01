@@ -9,7 +9,7 @@
 # wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh?nocache"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/home/yrampuria bash
 
 
-PROJ_DIR=${PROJ_DIR:-/usr/local}
+PROJ_DIR=${PROJ_DIR:-$HOME}
 export PATH=${PATH}:${PROJ_DIR}/bin
 
 OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
@@ -261,8 +261,9 @@ cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 
 echo Installing Keybase cli
-curl --remote-name https://prerelease.keybase.io/keybase_amd64.deb
-sudo apt install -qqy ./keybase_amd64.deb
+wget -q https://prerelease.keybase.io/keybase_amd64.deb -O /tmp/keybase_amd64.deb 
+sudo apt install -qqy /tmp/keybase_amd64.deb
+rm /tmp/keybase_amd64.deb 
 run_keybase
 
 echo Install google-cloud-sdk
