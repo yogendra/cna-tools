@@ -60,7 +60,7 @@ OS_TOOLS=(\
     wget \
     whois \
     )
-  sudo apt-get install -qqy "${OS_TOOLS[@]}"
+sudo apt update && sudo apt install -qqy "${OS_TOOLS[@]}"
 
 VERSION_JSON=$(wget ${GITHUB_OPTIONS} -qO- ${GIST}/raw/jumpbox-init-versions.json )
 function asset_version {
