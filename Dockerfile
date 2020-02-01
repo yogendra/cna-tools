@@ -5,5 +5,5 @@ ARG GIST_URL=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
 
 FROM ubuntu:lts
 
-RUN wget -qO- "${GIST_URL}?$RANDOM"  | OM_PIVNET_TOKEN="${OM_PIVNET_TOKEN}" PROJ_DIR="${PROJ_DIR}" GITHUB_OPTIONS="${GITHUB_OPTIONS}"  bash
+RUN wget -qO- "${GIST_URL}/raw/jumpbox-init.sh?$RANDOM"  | OM_PIVNET_TOKEN="${OM_PIVNET_TOKEN}" PROJ_DIR="${PROJ_DIR}" GITHUB_OPTIONS="${GITHUB_OPTIONS}"  bash
 
