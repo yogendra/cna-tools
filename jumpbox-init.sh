@@ -262,7 +262,7 @@ rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 
 echo Installing Keybase cli
 curl --remote-name https://prerelease.keybase.io/keybase_amd64.deb
-sudo apt install ./keybase_amd64.deb
+sudo apt install -qqy ./keybase_amd64.deb
 run_keybase
 
 echo Install google-cloud-sdk
