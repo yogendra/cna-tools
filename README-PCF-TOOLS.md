@@ -29,7 +29,7 @@ You will require:
 1. Create a docker network
 
    ```bash
-   docker network craete buildnet
+   docker network create buildnet
    ```
 
 1. Run a webserver to host secrets and
