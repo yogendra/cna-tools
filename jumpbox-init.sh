@@ -15,7 +15,7 @@ export PATH=${PATH}:${PROJ_DIR}/bin
 OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
 [[ -z ${OM_PIVNET_TOKEN} ]] && echo "OM_PIVNET_TOKEN environment variable not set. See instructions at https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec#jumpbox-init-sh" && exit 1
 echo PROJ_DIR=${PROJ_DIR}
-GITHUB_OPTIONS=""
+GITHUB_OPTIONS=${GITHUB_OPTIONS}
 [[ -d ${PROJ_DIR}/bin ]]  || mkdir -p ${PROJ_DIR}/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
 sudo ln -fs /usr/share/zoneinfo/Asia/Singapore /etc/localtime
