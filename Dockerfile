@@ -1,9 +1,19 @@
-ARG OM_PIVNET_TOKEN
-ARG PROJ_DIR
-ARG GITHUB_OPTIONS
-ARG GIST_URL=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
+FROM ubuntu:latest
+ARG build_secret_location=http://secrets-server/secrets.txt
+RUN apt update && \
+    apt -qqy install sudo wget && \
+    adduser --disabled-password --gecos '' pcf && \
+    adduser pcf sudo && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-FROM ubuntu:lts
+USER pcf
+WORKDIR /home/pcf
 
-RUN wget -qO- "${GIST_URL}/raw/jumpbox-init.sh?$RANDOM"  | OM_PIVNET_TOKEN="${OM_PIVNET_TOKEN}" PROJ_DIR="${PROJ_DIR}" GITHUB_OPTIONS="${GITHUB_OPTIONS}"  bash
+
+ENV PROJ_DIR=/home/pcf  
+RUN echo $build_secret_location && \
+    wget -qO- $build_secret_location
+
+RUN eval $(wget -qO- $build_secret_location) && \
+    wget -qO- "${GIST_URL}/raw/jumpbox-init.sh?$RANDOM" | bash
 
