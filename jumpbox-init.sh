@@ -190,7 +190,7 @@ chmod a+x ${PROJ_DIR}/bin/uaa
 
 # Get updated url at https://github.com/pivotal-cf/pivnet-cli/releases/latest
 URL="$(github_asset pivotal-cf/pivnet-cli linux-amd64)"
-echo Downloading: pivnet
+echo Downloading: pivnet from ${URL}
 wget -q ${URL} -O ${PROJ_DIR}/bin/pivnet
 chmod a+x ${PROJ_DIR}/bin/pivnet
 
