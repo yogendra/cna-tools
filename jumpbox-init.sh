@@ -40,7 +40,7 @@ alias jq=${PROJ_DIR}/bin/jq
 VERSION_JSON=$(wget -q ${GIST}/raw/jumpbox-init-versions.json -O-)
 function asset_version {
   ASSET_NAME=$1
-  echo ${VERSION}_JSON | jq -r ".[\"${ASSET_NAME}\"]"
+  echo ${VERSION_JSON} | jq -r ".[\"$ASSET_NAME\"]"
 }
 
 function github_asset {
