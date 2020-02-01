@@ -2,6 +2,7 @@
 # Set 2 Environment variables
 #  PROJ_DIR : Project Directory. All tools will get install under PROJ_DIR/bin. (defaults: /usr/local)
 #  OM_PIVNET_TOKEN: Pivotal Network Token (required) Its **NOT** ending with -r. It looks like DJHASLD7_HSDHA7
+#  GITHUB_OPTIONS: (Optional) Provide github userid and token for accessing API. 
 # Run
 # wget -qO- "https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec/raw/jumpbox-init.sh?nocache"  | OM_PIVNET_TOKEN=DJHASLD7_HSDHA7 bash
 # Or to put binaries at your preferred location (example: /home/me/bin), provide PROD_DIR
@@ -17,17 +18,6 @@ echo PROJ_DIR=${PROJ_DIR}
 [[ -d ${PROJ_DIR}/bin ]]  || mkdir -p ${PROJ_DIR}/bin
 GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
 
-
-
-cat <<EOF
-========================================================================
-General Instructions
-========================================================================
-  Add following line to .profile/.bash_profile
-  export PATH=${PROJ_DIR}/bin:\${PATH}
-
-========================================================================
-EOF
 
 # Get updated url at "https://github.com/stedolan/jq/releases/latest
 VERSION=$(wget -qO- https://api.github.com/repos/stedolan/jq/releases/latest | grep tag_name | sed -E  's/.*: "(.*)",/\1/')
@@ -213,15 +203,6 @@ chmod a+x ${PROJ_DIR}/bin/direnv
 
 wget -q "${GIST}/raw/.direnvrc" -O ${HOME}/.direnvrc
 
-cat <<EOF
-========================================================================
-direnv: Additional Instrucations
-========================================================================
-  Add following lines to .profile/.bash_profile
-  export PATH=${PROJ_DIR}/bin:\${PATH}
-  eval "\$(direnv hook bash)"
-========================================================================
-EOF
 
 # Get updated url at https://network.pivotal.io/products/p-scheduler
 VERSION=$(asset_version p-scheduler)
@@ -258,14 +239,28 @@ wget -q ${GIST}/raw/keys | while read key; do
   wget -qO - "${key}" >> ${HOME}/.ssh/authorized_keys
 done
 
+
+if [[ -z $(cat ~/.bashrc | grep "# ==== ADDED BY jumpbox-init.sh ====") ]]
+then
+echo Setting up and persisting shell settings
+cat <<EOF >> ~/.bashrc
+# ==== ADDED BY jumpbox-init.sh ====
+export PATH=${PROJ_DIR}/bin:\${PATH}
+eval "\$(direnv hook bash)"
+EOF
+fi
+
 cat <<EOF
 ========================================================================
 SSH Config
 ========================================================================
-To generate new keys and setup passwordless login run:
+* Reload shell settings to pickup changes fro. Run following
+
+source ~/.bashrc
+
+* (OPTIONAL) To generate new keys and setup passwordless login run:
 [ ! -f ${HOME}/.ssh/id_rsa ] && ssh-keygen  -q -t rsa -N "" && cat ${HOME}/.ssh/id_rsa.pub >> ${HOME}/.ssh/authorized_keys
 [ ! -f ${HOME}/.ssh/id_dsa ] && ssh-keygen  -q -t dsa -N "" && cat ${HOME}/.ssh/id_dsa.pub >> ${HOME}/.ssh/authorized_keys
 EOF
-
 
 echo Done
