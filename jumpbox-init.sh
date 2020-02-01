@@ -226,6 +226,29 @@ cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 
 
+echo Install google-cloud-sdk
+# Add the Cloud SDK distribution URI as a package source
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+# Import the Google Cloud Platform public key
+wget -qO- https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+
+# Update the package list and install the Cloud SDK
+sudo apt-get update
+sudo apt-get -qqy install google-cloud-sdk
+
+
+echo Install aws client
+sudo apt-get install unzip
+wget -q "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+unzip /tmp/awscliv2.zip -d $PROJ_DIR
+rm -f /tmp/awscliv2.zip
+sudo $PROJ_DIR/aws/install
+
+
+echo Install  Azure client
+wget -qO- https://aka.ms/InstallAzureCLIDeb | sudo bash
+
 
 mkdir -p .vim/autoload
 wget -q "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" -O ${HOME}/.vim/autoload/plug.vim
@@ -253,15 +276,20 @@ fi
 
 cat <<EOF
 ========================================================================
-SSH Config
+Current Shell Config
 ========================================================================
 * Reload shell settings to pickup changes fro. Run following
 
 source ~/.bashrc
 
+========================================================================
+SSH Config
+========================================================================
 * (OPTIONAL) To generate new keys and setup passwordless login run:
 [ ! -f ${HOME}/.ssh/id_rsa ] && ssh-keygen  -q -t rsa -N "" && cat ${HOME}/.ssh/id_rsa.pub >> ${HOME}/.ssh/authorized_keys
 [ ! -f ${HOME}/.ssh/id_dsa ] && ssh-keygen  -q -t dsa -N "" && cat ${HOME}/.ssh/id_dsa.pub >> ${HOME}/.ssh/authorized_keys
+========================================================================
+
 EOF
 
 echo Done
