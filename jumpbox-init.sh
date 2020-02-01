@@ -30,14 +30,14 @@ General Instructions
 EOF
 
 # Get updated url at "https://github.com/stedolan/jq/releases/latest
-VERSION=$(curl -s https://api.github.com/repos/stedolan/jq/releases/latest | grep tag_name | sed -E  's/.*: "(.*)",/\1/')
+VERSION=$(wget -qO- https://api.github.com/repos/stedolan/jq/releases/latest | grep tag_name | sed -E  's/.*: "(.*)",/\1/')
 URL="https://github.com/stedolan/jq/releases/download/${VERSION}/jq-linux64"
 echo Downloading: jq from ${URL} ${VERSION}qq
 wget -q ${URL} -O ${PROJ_DIR}/bin/jq
 chmod a+x ${PROJ_DIR}/bin/jq
 alias jq=${PROJ_DIR}/bin/jq
 
-VERSION_JSON=$(wget -q ${GIST}/raw/jumpbox-init-versions.json -O-)
+VERSION_JSON=$(wget -qO- ${GIST}/raw/jumpbox-init-versions.json )
 function asset_version {
   ASSET_NAME=$1
   echo ${VERSION_JSON} | jq -r ".[\"$ASSET_NAME\"]"
@@ -47,7 +47,9 @@ function github_asset {
     REPO=$1
     EXPRESSION="${2:-linux}"
     TAG="${3:-latest}"
-    curl -s https://api.github.com/repos/${REPO}/releases/${TAG} | jq -r ".assets[] | select(.name|test(\"${EXPRESSION}\"))|.browser_download_url"
+    ASSET_URL="https://api.github.com/repos/${REPO}/releases/${TAG}"
+    JQ_EXPR=".assets[] | select(.name|test(\"$EXPRESSION\"))|.browser_download_url"
+    wget -qO- ${ASSET_URL} | jq -r "${JQ_EXPR}"
 }
 set -e
 
@@ -93,7 +95,7 @@ chmod a+x ${PROJ_DIR}/bin/bbr
 
 # Always updated version :D
 # Get updated url at https://github.com/cloudfoundry/cli/releases/latest
-VERSION=$(curl -s https://api.github.com/repos/cloudfoundry/cli/releases/latest  | jq -r '.tag_name' | sed s/^v// )
+VERSION=$(wget -qO- https://api.github.com/repos/cloudfoundry/cli/releases/latest  | jq -r '.tag_name' | sed s/^v// )
 URL="https://packages.cloudfoundry.org/stable?release=linux64-binary&version=${VERSION}&source=github-rel"
 echo Downloading: cf from ${URL}
 wget -q ${URL}  -O- | tar -C ${PROJ_DIR}/bin -zx cf
@@ -127,7 +129,7 @@ wget -q ${URL} -O ${PROJ_DIR}/bin/texplate
 chmod a+x ${PROJ_DIR}/bin/texplate
 
 # Get updated url at https://download.docker.com/linux/static/stable/x86_64/
-VERSION=$(curl -s https://api.github.com/repos/docker/docker-ce/releases/latest  | jq -r '.tag_name'   | sed s/^v//)
+VERSION=$(wget -qO- https://api.github.com/repos/docker/docker-ce/releases/latest  | jq -r '.tag_name'   | sed s/^v//)
 URL="https://download.docker.com/linux/static/stable/x86_64/docker-${VERSION}.tgz"
 echo Downloading: docker from ${URL}
 wget -q ${URL} -O- | tar -C /tmp -xz  docker/docker
@@ -194,7 +196,7 @@ wget -q ${URL} -O- | tar -C ${PROJ_DIR}/bin -xz ./riff
 chmod a+x ${PROJ_DIR}/bin/riff
 
 # Get updated url at https://github.com/sharkdp/bat/releases/latest
-VERSION=$(curl -s https://api.github.com/repos/sharkdp/bat/releases/latest  | jq -r '.tag_name'  )
+VERSION=$(wget -qO- https://api.github.com/repos/sharkdp/bat/releases/latest  | jq -r '.tag_name'  )
 URL="$(github_asset  sharkdp/bat x86_64-unknown-linux-gnu tags/${VERSION})"
 echo Downloading: bat from ${URL}
 wget -q  ${URL} -O- | tar -C /tmp -xz bat-${VERSION}-x86_64-unknown-linux-gnu/bat
