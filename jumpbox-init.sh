@@ -242,8 +242,9 @@ done
 
 if [[ -z $(cat ~/.bashrc | grep "# ==== ADDED BY jumpbox-init.sh ====") ]]
 then
-echo Setting up and persisting shell settings
-cat <<EOF >> ~/.bashrc
+  echo Setting up and persisting shell settings
+  cp ~/.bashrc ~/.bashrc.pre-init-$(date +%Y%m%d-%H%M%S)
+  cat <<EOF >> ~/.bashrc
 # ==== ADDED BY jumpbox-init.sh ====
 export PATH=${PROJ_DIR}/bin:\${PATH}
 eval "\$(direnv hook bash)"
