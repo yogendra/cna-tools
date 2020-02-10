@@ -312,25 +312,14 @@ export PATH=${PROJ_DIR}/bin:\${PATH}
 eval "\$(direnv hook bash)"
 EOF
 fi
+source ~/.bashrc
+
+echo Created workspace directory
 mkdir -p $PROJ_DIR/workspace/deployments
 mkdir -p $PROJ_DIR/workspace/tiles
 
-cat <<EOF
-========================================================================
-Current Shell Config
-========================================================================
-* Reload shell settings to pickup changes fro. Run following
-
-source ~/.bashrc
-
-========================================================================
-SSH Config
-========================================================================
-* (OPTIONAL) To generate new keys and setup passwordless login run:
-[ ! -f ${HOME}/.ssh/id_rsa ] && ssh-keygen  -q -t rsa -N "" && cat ${HOME}/.ssh/id_rsa.pub >> ${HOME}/.ssh/authorized_keys
-[ ! -f ${HOME}/.ssh/id_dsa ] && ssh-keygen  -q -t dsa -N "" && cat ${HOME}/.ssh/id_dsa.pub >> ${HOME}/.ssh/authorized_keys
-========================================================================
-
+[ ! -f ${HOME}/.ssh/id_rsa ] && ssh-keygen  -q -t rsa -N "" -f ${HOME}/.ssh/id_rsa && cat ${HOME}/.ssh/id_rsa.pub >> ${HOME}/.ssh/authorized_keys
+[ ! -f ${HOME}/.ssh/id_dsa ] && ssh-keygen  -q -t dsa -N "" -f ${HOME}/.ssh/id_rsa && cat ${HOME}/.ssh/id_dsa.pub  >> ${HOME}/.ssh/authorized_keys
 EOF
 
 echo Done
