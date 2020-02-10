@@ -312,6 +312,8 @@ export PATH=${PROJ_DIR}/bin:\${PATH}
 eval "\$(direnv hook bash)"
 EOF
 fi
+mkdir -p $PROJ_DIR/workspace/deployments
+mkdir -p $PROJ_DIR/workspace/tiles
 
 cat <<EOF
 ========================================================================
