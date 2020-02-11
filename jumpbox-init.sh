@@ -283,7 +283,7 @@ wget -q "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -O "
 unzip /tmp/awscliv2.zip -d $PROJ_DIR
 rm -f /tmp/awscliv2.zip
 sudo $PROJ_DIR/aws/install
-
+rm -rf $PROJ_DIR/aws
 
 echo Install  Azure client
 wget -qO- https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -318,8 +318,8 @@ echo Created workspace directory
 mkdir -p $PROJ_DIR/workspace/deployments
 mkdir -p $PROJ_DIR/workspace/tiles
 
-[ ! -f ${HOME}/.ssh/id_rsa ] && ssh-keygen  -q -t rsa -N "" -f ${HOME}/.ssh/id_rsa && cat ${HOME}/.ssh/id_rsa.pub >> ${HOME}/.ssh/authorized_keys
-[ ! -f ${HOME}/.ssh/id_dsa ] && ssh-keygen  -q -t dsa -N "" -f ${HOME}/.ssh/id_rsa && cat ${HOME}/.ssh/id_dsa.pub  >> ${HOME}/.ssh/authorized_keys
+[[ ! -f ${HOME}/.ssh/id_rsa ]] && ssh-keygen  -q -t rsa -N "" -f ${HOME}/.ssh/id_rsa && cat ${HOME}/.ssh/id_rsa.pub >> ${HOME}/.ssh/authorized_keys
+[[ ! -f ${HOME}/.ssh/id_dsa ]] && ssh-keygen  -q -t dsa -N "" -f ${HOME}/.ssh/id_rsa && cat ${HOME}/.ssh/id_dsa.pub  >> ${HOME}/.ssh/authorized_keys
 EOF
 
 echo Done
