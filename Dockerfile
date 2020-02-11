@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 ARG build_secret_location=http://secrets-server/secrets.txt
-ADD sources.list /etc/apt/source.list
+ADD sources.list /etc/apt/sources.list
 
 RUN set -e && \
     apt update && \
