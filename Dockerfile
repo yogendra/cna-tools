@@ -10,13 +10,12 @@ RUN set -e && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER pcf
+ENV PROJ_DIR=/home/pcf
 WORKDIR /home/pcf
-
-ENV PROJ_DIR=/home/pcf  
-
-VOLUME /home/pcf/workspace
 
 RUN set -e &&\
     eval $(wget -qO- $build_secret_location) && \
     wget -qO- "${GIST_URL}/raw/jumpbox-init.sh?$RANDOM" | bash && \
     sudo rm -rf /var/lib/apt/lists/* 
+
+VOLUME /home/pcf/workspace
