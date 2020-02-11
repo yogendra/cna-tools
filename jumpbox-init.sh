@@ -320,6 +320,6 @@ mkdir -p $PROJ_DIR/workspace/tiles
 
 [[ ! -f ${HOME}/.ssh/id_rsa ]] && ssh-keygen  -q -t rsa -N "" -f ${HOME}/.ssh/id_rsa && cat ${HOME}/.ssh/id_rsa.pub >> ${HOME}/.ssh/authorized_keys
 [[ ! -f ${HOME}/.ssh/id_dsa ]] && ssh-keygen  -q -t dsa -N "" -f ${HOME}/.ssh/id_dsa && cat ${HOME}/.ssh/id_dsa.pub  >> ${HOME}/.ssh/authorized_keys
-EOF
+
 
 echo Done
