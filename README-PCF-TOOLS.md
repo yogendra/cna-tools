@@ -35,7 +35,7 @@ You will require:
 1. Run a webserver to host secrets and
 
    ```bash
-   docker run --name secrets-server --rm --volume $PWD:/usr/share/nginx/html:ro --network buildnet nginx
+   docker run --name secrets-server --rm --volume $PWD:/usr/share/nginx/html:ro --network buildnet -d nginx
    ```
 
 1. Run the build with following command
@@ -43,3 +43,16 @@ You will require:
    ```bash
    docker build --network=container:secrets-server --tag yogendra/pcf-jumpbox:latest .
    ```
+
+1. Stop secrets webserver
+
+   ```bash
+   docker stop secrets-server
+   ```
+
+# Update versions
+
+- Open `generate-version.sh`
+- Update line with calls to `add_version`
+- Run `./generate-versions.sh > versions.json`
+- Commit changes and push repo
