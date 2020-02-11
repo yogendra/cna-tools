@@ -1,0 +1,11 @@
+{
+  "cf": "6.49.0",
+  "docker": "19.03.5",
+  "p-event-alerts": "1.2.8",
+  "p-scheduler": "1.2.28",
+  "pcf-app-autoscaler": "2.0.199",
+  "pivotal-container-service": "1.6.1",
+  "pivotal-function-service": "alpha v0.4.0",
+  "riff": "v0.4.0",
+  "terraform": "0.11.11"
+}
