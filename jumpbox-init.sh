@@ -62,7 +62,7 @@ OS_TOOLS=(\
     )
 sudo apt update && sudo apt install -qqy "${OS_TOOLS[@]}"
 
-VERSION_JSON=$(wget ${GITHUB_OPTIONS} -qO- ${GIST}/raw/jumpbox-init-versions.json )
+VERSION_JSON=$(wget ${GITHUB_OPTIONS} -qO- ${GIST}/raw/versions.json )
 function asset_version {
   ASSET_NAME=$1
   echo ${VERSION_JSON} | jq -r ".[\"$ASSET_NAME\"]"
@@ -120,7 +120,7 @@ chmod a+x ${PROJ_DIR}/bin/bbr
 
 # Always updated version :D
 # Get updated url at https://github.com/cloudfoundry/cli/releases/latest
-VERSION=$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/cloudfoundry/cli/releases/latest  | jq -r '.tag_name' | sed s/^v// )
+VERSION=$(asset_version cf)
 URL="https://packages.cloudfoundry.org/stable?release=linux64-binary&version=${VERSION}&source=github-rel"
 echo Downloading: cf from ${URL}
 wget -q ${URL}  -O- | tar -C ${PROJ_DIR}/bin -zx cf
@@ -154,7 +154,7 @@ wget -q ${URL} -O ${PROJ_DIR}/bin/texplate
 chmod a+x ${PROJ_DIR}/bin/texplate
 
 # Get updated url at https://download.docker.com/linux/static/stable/x86_64/
-VERSION=$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/docker/docker-ce/releases/latest  | jq -r '.tag_name'   | sed s/^v//)
+VERSION=$(asset_version docker)
 URL="https://download.docker.com/linux/static/stable/x86_64/docker-${VERSION}.tgz"
 echo Downloading: docker from ${URL}
 wget -q ${URL} -O- | tar -C /tmp -xz  docker/docker
