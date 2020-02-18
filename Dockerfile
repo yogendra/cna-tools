@@ -19,3 +19,6 @@ RUN set -e &&\
     sudo rm -rf /var/lib/apt/lists/* 
 
 VOLUME /home/pcf/workspace
+
+# Keep container running as daemon
+CMD tail -f /dev/null
