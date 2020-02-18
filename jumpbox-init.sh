@@ -17,7 +17,7 @@ OM_PIVNET_TOKEN=${OM_PIVNET_TOKEN}
 echo PROJ_DIR=${PROJ_DIR}
 GITHUB_OPTIONS=${GITHUB_OPTIONS}
 [[ -d ${PROJ_DIR}/bin ]]  || mkdir -p ${PROJ_DIR}/bin
-GIST=https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec
+GIST=${1:-https://gist.github.com/yogendra/318c09f0cd2548bdd07f592722c9bbec}
 sudo ln -fs /usr/share/zoneinfo/Asia/Singapore /etc/localtime
 
 echo Install basic tools for the jumpbox
@@ -317,9 +317,17 @@ source ~/.bashrc
 echo Created workspace directory
 mkdir -p $PROJ_DIR/workspace/deployments
 mkdir -p $PROJ_DIR/workspace/tiles
+echo <<EOF
+Create your SSH keys
+===============================================================================
+[[ ! -f ${HOME}/.ssh/id_rsa ]] && \
+  ssh-keygen  -q -t rsa -N "" -f ${HOME}/.ssh/id_rsa && \
+  cat ${HOME}/.ssh/id_rsa.pub >> ${HOME}/.ssh/authorized_keys
 
-[[ ! -f ${HOME}/.ssh/id_rsa ]] && ssh-keygen  -q -t rsa -N "" -f ${HOME}/.ssh/id_rsa && cat ${HOME}/.ssh/id_rsa.pub >> ${HOME}/.ssh/authorized_keys
-[[ ! -f ${HOME}/.ssh/id_dsa ]] && ssh-keygen  -q -t dsa -N "" -f ${HOME}/.ssh/id_dsa && cat ${HOME}/.ssh/id_dsa.pub  >> ${HOME}/.ssh/authorized_keys
+[[ ! -f ${HOME}/.ssh/id_dsa ]] && \
+  ssh-keygen  -q -t dsa -N "" -f ${HOME}/.ssh/id_dsa && \
+  cat ${HOME}/.ssh/id_dsa.pub  >> ${HOME}/.ssh/authorized_keys
 
+EOF
 
 echo Done
