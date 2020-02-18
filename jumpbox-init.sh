@@ -174,7 +174,7 @@ echo Downloading: docker-compose from ${URL}
 wget -q ${URL} -O ${PROJ_DIR}/bin/docker-compose
 chmod a+x ${PROJ_DIR}/bin/docker-compose
 
-# Get updated url at https://github.com/projectriff/riff/releases/latest
+# Get updated url at https://github.com/projectriff/cli/releases/latest
 VERSION=$(asset_version riff)
 URL="$(github_asset projectriff/cli  linux-amd64 tags/${VERSION})"
 echo Downloading: riff from ${URL}
