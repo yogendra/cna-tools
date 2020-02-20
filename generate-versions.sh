@@ -41,6 +41,7 @@ github_version "riff" "projectriff/cli"
 github_version "cf" "cloudfoundry/cli"
 github_version "docker" "docker/docker-ce"
 github_version "buildpack" "buildpacks/pack"
+github_version "duffle" "cnabio/duffle"
 
 JSON="$JSON
 }"
