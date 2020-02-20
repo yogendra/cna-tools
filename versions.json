@@ -4,6 +4,7 @@
   "cf": "6.49.0",
   "container-services-manager": "0.6.42",
   "docker": "19.03.6",
+  "duffle": "0.3.5-beta.1",
   "p-event-alerts": "1.2.10",
   "p-scheduler": "1.2.30",
   "pcf-app-autoscaler": "2.0.233",
