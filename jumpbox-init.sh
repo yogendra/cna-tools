@@ -212,6 +212,16 @@ om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}" -p pivotal-f
 mv /tmp/duffle-linux-* ${PROJ_DIR}/bin/duffle
 chmod a+x ${PROJ_DIR}/bin/duffle
 
+# Download build service client
+VERSION="$(asset_version build-service)"
+echo PivNet Download: Pivotal Build Service client ${VERSION}
+om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p build-service --pivnet-file-glob="pb-${VERSION}-linux"
+mv /tmp/pb-${VERSION}-linux ${PROJ_DIR}/bin/pb
+chmod a+x ${PROJ_DIR}/bin/pb
+
+om download-product -t "${OM_PIVNET_TOKEN}" -o /tmp -v "${VERSION}"  -p build-service --pivnet-file-glob="duffle-${VERSION}-linux"
+mv /tmp/duffle-${VERSION}-linux ${PROJ_DIR}/bin/pb-duffle
+chmod a+x ${PROJ_DIR}/bin/pb-duffle
 
 # Get updated url at https://github.com/projectriff/riff/releases/latest
 VERSION=$(asset_version riff)
