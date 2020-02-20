@@ -11,20 +11,39 @@ function add_version {
     JSON="$JSON
     ${JSON_ELEMENT}"
 }
+function pivnet_version {
+    product=$1
+    version="$(pivnet releases -p $product --format json | jq -r '. |= sort_by("release_date") | .[0].version')"
+    add_version "$product" "$version"
+}
+
+function github_version {
+    product=$1
+    repo=$2
+    version="$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/$repo/releases  | jq -r '. | map(select (.prerelease == false))| .[0].tag_name')"
+    [[ -z $version ]] && \
+        version=version="$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/$repo/releases  | jq -r '[0].tag_name')"
+    add_version "$product" "$version"
+}
 
 
-add_version "pivotal-function-service" "alpha v0.4.0"
-add_version "pivotal-container-service" "1.6.1"
-add_version "p-scheduler" "1.2.28"
-add_version "pcf-app-autoscaler" "2.0.199"
-add_version "p-event-alerts" "1.2.8"
 add_version "terraform" "0.11.14"
-add_version "riff" "v0.5.0"
-add_version "cf" "$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/cloudfoundry/cli/releases/latest  | jq -r '.tag_name' | sed s/^v// )"
-add_version "docker" "$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/docker/docker-ce/releases/latest  | jq -r '.tag_name'   | sed s/^v//)"
+
+pivnet_version "pivotal-function-service"
+pivnet_version "pivotal-container-service"
+pivnet_version "p-scheduler"
+pivnet_version "pcf-app-autoscaler" 
+pivnet_version "p-event-alerts"
+pivnet_version "container-services-manager"
+pivnet_version "build-service"
+
+github_version "riff" "projectriff/cli"
+github_version "cf" "cloudfoundry/cli"
+github_version "docker" "docker/docker-ce"
+github_version "buildpack" "buildpacks/pack"
 
 JSON="$JSON
 }"
-
+echo "$JSON" >&2
 echo "$JSON" | jq -S
 
