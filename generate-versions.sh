@@ -13,16 +13,16 @@ function add_version {
 }
 function pivnet_version {
     product=$1
-    version="$(pivnet releases -p $product --format json | jq -r '. |= sort_by("release_date") | .[0].version')"
+    version="$(pivnet releases -p $product --format json | jq -r '. |= sort_by("release_date") | .[0].version' | sed 's/^v//')"
     add_version "$product" "$version"
 }
 
 function github_version {
     product=$1
     repo=$2
-    version="$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/$repo/releases  | jq -r '. | map(select (.prerelease == false))| .[0].tag_name')"
-    [[ -z $version ]] && \
-        version=version="$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/$repo/releases  | jq -r '[0].tag_name')"
+    version="$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/$repo/releases  | jq -r '. | map(select (.prerelease == false))| .[0].tag_name' | sed 's/^v//')"
+    [[ $version == "null" ]] && \
+        version="$(wget ${GITHUB_OPTIONS} -qO- https://api.github.com/repos/$repo/releases  | jq -r '.[0].tag_name' | sed 's/^v//')"
     add_version "$product" "$version"
 }
 
@@ -44,6 +44,4 @@ github_version "buildpack" "buildpacks/pack"
 
 JSON="$JSON
 }"
-echo "$JSON" >&2
 echo "$JSON" | jq -S
-
