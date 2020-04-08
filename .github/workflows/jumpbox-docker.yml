@@ -8,8 +8,6 @@ jobs:
     services:
       secrets-server:
         image: nginx
-        ports:
-          - 80:80
         options: --name secrets-server --hostname secrets-server
     steps:
       - name: Checkout Source Code
@@ -20,9 +18,9 @@ jobs:
           docker cp $GITHUB_WORKSPACE/config/secrets.sh secrets-server:/usr/share/nginx/html/secrets.sh
       - name: Build Docker Image
         run: |
-          DOCKER_BUILD_NETWORK=$(docker network ls -f label=e87b52 --format "{{.Name}}" | head -1)
-          echo DOCKER_BUILD_NETWORK=$DOCKER_BUILD_NETWORK
-          docker build --network $DOCKER_BUILD_NETWORK -t yogendra/pcf-jumpbox:latest   -f yogendra_pcf-jumpbox.Dockerfile .
+          build_secrets_location=http://secrets-server:${{ job.services.secrets-erver.ports[80]}}/secrets.sh
+          echo build_secrets_location=$build_secrets_location
+          docker build --build-arg build_secrets_location=$build_secrets_location  -t yogendra/pcf-jumpbox:latest   -f yogendra_pcf-jumpbox.Dockerfile .
       - name: Test Docker Image
         run: |
           echo WIP
