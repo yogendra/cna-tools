@@ -1,5 +1,7 @@
 # PCF Tools
 
+![Jumpbox Docker Build](https://github.com/yogendra/pcf-tools/workflows/Jumpbox%20Docker%20Build/badge.svg)
+
 This gist has scripts to quickly setup a jumpbox.
 
 - Downloads tools (cf, om, bbl, etc)
@@ -45,13 +47,13 @@ This gist has scripts to quickly setup a jumpbox.
 1. Run a webserver to host secrets
 
    ```bash
-   docker run --name secrets --rm --volume $PWD/config:/usr/share/nginx/html:ro --network buildnet -d nginx
+   docker run --name secrets --rm --volume $PWD:/usr/share/nginx/html:ro --network buildnet -d nginx
    ```
 
 1. (**Optional**) test server by running another container as follows
 
    ```bash
-   docker run --name secrets-consumer --rm --network buildnet -t busybox wget -qO- http://secrets/secrets.sh
+   docker run --name secrets-consumer --rm --network buildnet -t busybox wget -qO- http://secrets/config/secrets.sh
    ```
 
 1. Run the build with following command
