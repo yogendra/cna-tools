@@ -8,6 +8,8 @@ jobs:
     services:
       secrets:
         image: nginx
+        ports:
+          - 80:80
         volumes:
           - ${{ github.workspace }}:/usr/share/nginx/html
     steps:
@@ -19,12 +21,12 @@ jobs:
           ls -l
       - name: Test Secrets Server
         run: |
-          secrets="$(docker run --rm -t busybox wget -O- http://secrets/secrets.sh)"
+          secrets="$(docker run --rm -t busybox wget -O- http://localhost/secrets.sh)"
           echo $secrets | wc -l
           [[ -z $secrets ]] && exit 1
       - name: Build Docker Image
         run: |
-          build_secrets_location=http://secret/secrets.sh          
+          build_secrets_location=http://localhost/secrets.sh
           docker build -t yogendra/pcf-jumpbox:latest   -f yogendra_pcf-jumpbox.Dockerfile .
       - name: Test Docker Image
         run: |
