@@ -29,7 +29,7 @@ jobs:
         with:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-          login-server: ${{ secrets.REGISTRY_SERVER }}
+          login-server: ${{ secrets.REGISTRY_ADDRESS }}
       - name: Push Docker Image
         run: |
           docker push yogendra/pcf-jumpbox:latest
