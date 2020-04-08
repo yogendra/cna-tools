@@ -21,7 +21,7 @@
   },
   "build-service": {
     "source": "pivnet",
-    "version": "0.0.4"
+    "version": "0.1.0"
   },
   "cf": {
     "source": "custom",
@@ -42,11 +42,6 @@
     "url": "https://github.com/direnv/direnv/releases/download/v2.21.2/direnv.linux-amd64",
     "version": "v2.21.2"
   },
-  "docker-compose": {
-    "source": "github",
-    "url": "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-Linux-x86_64",
-    "version": "1.25.4"
-  },
   "docker-machine": {
     "source": "github",
     "url": "https://github.com/docker/machine/releases/download/v0.16.2/docker-machine-Linux-x86_64",
@@ -61,6 +56,11 @@
     "source": "custom",
     "url": "https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl",
     "version": "v1.18.0"
+  },
+  "minio-mc": {
+    "source": "custom",
+    "url": "https://dl.min.io/client/mc/release/linux-amd64/mc",
+    "version": "latest"
   },
   "om": {
     "source": "github",
@@ -86,12 +86,12 @@
   },
   "pivnet": {
     "source": "github",
-    "url": "https://github.com/pivotal-cf/pivnet-cli/releases/download/v1.0.1/pivnet-linux-amd64-1.0.1",
-    "version": "v1.0.1"
+    "url": "https://github.com/pivotal-cf/pivnet-cli/releases/download/v1.0.2/pivnet-linux-amd64-1.0.2",
+    "version": "v1.0.2"
   },
   "pivotal-container-service": {
     "source": "pivnet",
-    "version": "1.6.1"
+    "version": "1.7.0"
   },
   "pivotal-function-service": {
     "source": "pivnet",
