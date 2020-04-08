@@ -35,6 +35,7 @@ OS_TOOLS=(\
     ca-certificates \
     coreutils \
     curl \
+    direnv \
     dnsutils \
     file \
     git \
@@ -70,10 +71,11 @@ OS_TOOLS=(\
     )
 sudo apt update && sudo apt install -qqy "${OS_TOOLS[@]}"
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+
 
 # Docker 
-wget -qO- "https://raw.githubusercontent.com/${GIT_REPO}/master/scripts/dotfiles-init.sh?$RANDOM"| bash
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
@@ -91,7 +93,7 @@ echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 
-#Acure cli
+#Azure cli
 curl -sL https://packages.microsoft.com/keys/microsoft.asc | 
     gpg --dearmor | 
     sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
@@ -103,16 +105,18 @@ echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO 
 # Other tools
 OS_TOOLS=(\
     azure-cli \
+    cf-cli \
+    containerd.io \
     docker-ce \
     docker-ce-cli \
-    containerd.io \
-    kubectl \
-    google-cloud-sdk
+    docker-compose \
+    google-cloud-sdk \
+    kubectl 
     )
 sudo apt update && sudo apt install -qqy "${OS_TOOLS[@]}"
 
 
-asset_json=$(cat ${PCF_TOOLS_DIR}/config/assets.json)
+asset_json=$(wget -qO- https://raw.githubusercontent.com/${GIT_REPO}/master/config/assets.json)
 function asset_version {
   name=$1
   echo ${asset_json} | jq -r ".[\"$name\"].version"
@@ -163,26 +167,12 @@ echo Downloading: bbr from ${URL}
 wget -q ${URL} -O ${PROJ_DIR}/bin/bbr
 chmod a+x ${PROJ_DIR}/bin/bbr
 
-# Always updated version :D
-# Get updated url at https://github.com/cloudfoundry/cli/releases/latest
-URL="$(asset_url cf)"
-echo Downloading: cf from ${URL}
-wget -q ${URL}  -O- | tar -C ${PROJ_DIR}/bin -zx cf
-chmod a+x ${PROJ_DIR}/bin/cf
-
 # Get updated url at https://github.com/cloudfoundry-incubator/credhub-cli/releases/latest
 URL="$(asset_url credhub)"
 echo Downloading: credhub from ${URL}
 wget -q ${URL} -O- | tar -C ${PROJ_DIR}/bin -xz  ./credhub
 chmod a+x ${PROJ_DIR}/bin/credhub
 
-
-# Always updated version :D
-# Get updated url at https://storage.googleapis.com/kubernetes-release/release/stable.txt
-URL="$(asset_url kubectl)"
-echo Downloading: kubectl from ${URL}
-wget -q ${URL} -O ${PROJ_DIR}/bin/kubectl
-chmod a+x ${PROJ_DIR}/bin/kubectl
 
 # Get updated url at https://github.com/buildpacks/pack/releases/latest
 URL="$(asset_url pack)"
@@ -197,13 +187,6 @@ echo Downloading: texplate from ${URL}
 wget -q ${URL} -O ${PROJ_DIR}/bin/texplate
 chmod a+x ${PROJ_DIR}/bin/texplate
 
-# Get updated url at https://download.docker.com/linux/static/stable/x86_64/
-URL="$(asset_url docker)"
-echo Downloading: docker from ${URL}
-wget -q ${URL} -O- | tar -C /tmp -xz  docker/docker
-mv /tmp/docker/docker ${PROJ_DIR}/bin/docker
-chmod a+x ${PROJ_DIR}/bin/docker
-rm -rf /tmp/docker
 
 # Get updated url at https://github.com/docker/machine/releases/latest
 URL="$(asset_url docker-machine)"
@@ -229,6 +212,14 @@ echo Downloading: uaa from ${URL}
 wget -q ${URL} -O ${PROJ_DIR}/bin/uaa
 chmod a+x ${PROJ_DIR}/bin/uaa
 
+# Get updated url at https://github.com/sharkdp/bat/releases/latest
+VERSION="$(asset_version bat)"
+URL="$(asset_url bat)"
+echo Downloading: bat from ${URL}
+wget -q  ${URL} -O- | tar -C /tmp -xz bat-${VERSION}-x86_64-unknown-linux-gnu/bat
+mv /tmp/bat-${VERSION}-x86_64-unknown-linux-gnu/bat ${PROJ_DIR}/bin/bat
+chmod a+x  ${PROJ_DIR}/bin/bat
+rm -rf /tmp/bat-${VERSION}-x86_64-unknown-linux-gnu
 
 # Get updated url at https://github.com/pivotal-cf/pivnet-cli/releases/latest
 URL="$(asset_url pivnet)"
@@ -265,21 +256,6 @@ om download-product -t "${PIVNET_LEGACY_TOKEN}" -o /tmp -v "${VERSION}"  -p buil
 mv /tmp/duffle-${VERSION}-linux ${PROJ_DIR}/bin/pb-duffle
 chmod a+x ${PROJ_DIR}/bin/pb-duffle
 
-# Get updated url at https://github.com/sharkdp/bat/releases/latest
-VERSION="$(asset_version bat)"
-URL="$(asset_url bat)"
-echo Downloading: bat from ${URL}
-wget -q  ${URL} -O- | tar -C /tmp -xz bat-${VERSION}-x86_64-unknown-linux-gnu/bat
-mv /tmp/bat-${VERSION}-x86_64-unknown-linux-gnu/bat ${PROJ_DIR}/bin/bat
-chmod a+x  ${PROJ_DIR}/bin/bat
-rm -rf /tmp/bat-${VERSION}-x86_64-unknown-linux-gnu
-
-
-# Get updated url at https://github.com/direnv/direnv/releases/latest
-URL="$(github_url direnv/direnv)"
-echo Downloading: direnv from ${URL}
-wget -q  ${URL} -O ${PROJ_DIR}/bin/direnv
-chmod a+x ${PROJ_DIR}/bin/direnv
 
 # Get updated url at https://network.pivotal.io/products/p-scheduler
 VERSION=$(asset_version p-scheduler)
@@ -308,16 +284,11 @@ sudo apt install -qqy /tmp/keybase_amd64.deb
 rm /tmp/keybase_amd64.deb 
 run_keybase
 
-echo Install google-cloud-sdk
-# Add the Cloud SDK distribution URI as a package source
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-
-# Import the Google Cloud Platform public key
-wget -qO- https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-
-# Update the package list and install the Cloud SDK
-sudo apt update
-sudo apt -qqy install google-cloud-sdk
+echo Installing minio-mc
+URL="$(asset_url minio-mc)"
+echo Downloading: minio-mc from ${URL}
+wget -q ${URL} -O ${PROJ_DIR}/bin/mc
+chmod a+x ${PROJ_DIR}/bin/mc
 
 
 echo Install aws client
@@ -326,10 +297,6 @@ unzip /tmp/awscliv2.zip -d $PROJ_DIR
 rm -f /tmp/awscliv2.zip
 sudo $PROJ_DIR/aws/install
 rm -rf $PROJ_DIR/aws
-
-echo Install  Azure client
-wget -qO- https://aka.ms/InstallAzureCLIDeb | sudo bash
-
 
 echo Created workspace directory
 mkdir -p $PROJ_DIR/workspace/deployments
