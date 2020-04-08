@@ -19,6 +19,7 @@ jobs:
       - name: Test Secrets Server
         run: |
           secrets="$(docker run --name secrets-consumer --rm -t busybox wget -qO- http://secrets/secrets.sh)"
+          echo $secrets |wc -l
           [[ -z $secrets ]] && exit 1
       - name: Build Docker Image
         run: |
