@@ -1,6 +1,6 @@
 # PCF Tools
 
-![Jumpbox Docker Build](https://github.com/yogendra/pcf-tools/workflows/Jumpbox%20Docker%20Build/badge.svg)
+[![Jumpbox Docker Build][badge-jumpbox]][build-jumpbox]
 
 This gist has scripts to quickly setup a jumpbox.
 
@@ -82,3 +82,5 @@ This gist has scripts to quickly setup a jumpbox.
    ```
 
 [pivnet-profile]: https://network.pivotal.io/users/dashboard/edit-profile
+[build-jumpbox]: https://github.com/yogendra/pcf-tools/actions?query=workflow%3A%22Jumpbox+Docker+Build%22
+[badge-jumpbox]: https://github.com/yogendra/pcf-tools/workflows/Jumpbox%20Docker%20Build/badge.svg
