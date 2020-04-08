@@ -97,6 +97,7 @@ add_asset "cf" "custom" "$version" "https://packages.cloudfoundry.org/stable?rel
 version=$(_wget -O- https://storage.googleapis.com/kubernetes-release/release/stable.txt)
 add_asset "kubectl" "custom" "$version" "https://storage.googleapis.com/kubernetes-release/release/$version/bin/linux/amd64/kubectl"
 
+add_asset "minio-mc" "custom" "latest" "https://dl.min.io/client/mc/release/linux-amd64/mc"
 
 pivnet_asset "pivotal-function-service"
 pivnet_asset "pivotal-container-service"
@@ -114,9 +115,7 @@ github_asset bbr cloudfoundry-incubator/bosh-backup-and-restore bbr-.\*-linux-am
 github_asset credhub cloudfoundry-incubator/credhub-cli credhub-linux-.\*.tgz\$
 github_asset pack buildpacks/pack pack-v.\*-linux.tgz\$
 github_asset texplate pivotal-cf/texplate linux_amd64
-github_asset docker
 github_asset docker-machine docker/machine Linux-x86_64
-github_asset docker-compose docker/compose Linux-x86_64\$
 github_asset riff projectriff/cli linux-amd64 
 github_asset uaa cloudfoundry-incubator/uaa-cli linux-amd64
 github_asset pivnet pivotal-cf/pivnet-cli linux-amd64
