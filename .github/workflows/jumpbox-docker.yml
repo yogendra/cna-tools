@@ -15,11 +15,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Prepare Secrets
         run: |
-          ls -l 
           echo "${{ secrets.SECRETS_SH }}" >> ${GITHUB_WORKSPACE}/secrets.sh
+          ls -l
       - name: Test Secrets Server
         run: |
-          secrets="$(docker run --rm -t busybox wget -qO- http://secrets/secrets.sh)"
+          secrets="$(docker run --rm -t busybox wget -O- http://secrets/secrets.sh)"
           echo $secrets | wc -l
           [[ -z $secrets ]] && exit 1
       - name: Build Docker Image
