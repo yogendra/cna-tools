@@ -30,8 +30,8 @@ This gist has scripts to quickly setup a jumpbox.
 
    - Replace `<CHANGE_ME>` with proper values.
    - `PIVNET_LEGACY_TOKEN` is token form [Pivnet Profile Page][pivnet-profile]. This is **required**
-   - `GITHUB_TOKEB` is used for accessin github. This is useful if you hit API access limits.
-   - `GITHUB_REPO` is the repository on github tha you want to use for init scripts
+   - `GITHUB_TOKEN` is used for accessin github. This is useful if you hit API access limits.
+   - `GITHUB_REPO` is the repository on github that you want to use for init scripts
    - `TIMEZONE` is the timezone you want to set in the destination image
 
    **NOTE**: `GITHUB_OPTIONS` is optional and should be used if you run into API limit restrictions.
@@ -45,13 +45,7 @@ This gist has scripts to quickly setup a jumpbox.
 1. Run a webserver to host secrets
 
    ```bash
-   docker run --name secrets-server --rm --volume /home/docker-user:/usr/share/nginx/html:ro --network buildnet -d nginx
-   ```
-
-1. Copy `secrets.sh` to `secrets-server` container at `/usr/share/nginx/html`
-
-   ```bash
-   docker cp secrets.sh secrets-server:/usr/share/nginx/html/secrets.sh
+   docker run --name secrets-server --rm --volume $PWD/config:/usr/share/nginx/html:ro --network buildnet -d nginx
    ```
 
 1. (**Optional**) test server by running another container as follows
