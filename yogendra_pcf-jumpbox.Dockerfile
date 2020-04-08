@@ -14,7 +14,7 @@ ENV PROJ_DIR=/home/pcf
 WORKDIR /home/pcf
 
 FROM base
-ARG build_secrets_location=http://secrets-server/secrets.sh
+ARG build_secrets_location=http://secrets-server/config/secrets.sh
 
 
 RUN set -e &&\    
