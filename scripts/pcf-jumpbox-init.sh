@@ -194,12 +194,6 @@ echo Downloading: docker-machine from ${URL}
 wget -q ${URL}  -O ${PROJ_DIR}/bin/docker-machine
 chmod a+x ${PROJ_DIR}/bin/docker-machine
 
-# Get updated url at https://github.com/docker/compose/releases/latest
-URL="$(asset_url docker-compose)"
-echo Downloading: docker-compose from ${URL}
-wget -q ${URL} -O ${PROJ_DIR}/bin/docker-compose
-chmod a+x ${PROJ_DIR}/bin/docker-compose
-
 # Get updated url at https://github.com/projectriff/cli/releases/latest
 URL="$(asset_url riff)"
 echo Downloading: riff from ${URL}
