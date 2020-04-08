@@ -1,5 +1,4 @@
-FROM ubuntu:latest
-ARG build_secret_location=http://secrets-server/secrets.sh
+FROM ubuntu:latest as base
 
 ADD config/sources.list /etc/apt/sources.list
 
@@ -14,12 +13,13 @@ USER pcf
 ENV PROJ_DIR=/home/pcf
 WORKDIR /home/pcf
 
-RUN set -e &&\
-    echo 0 && \
+FROM base
+ARG build_secret_location=http://secrets-server/secrets.sh
+
+
+RUN set -e &&\    
     eval "$(wget -qO- $build_secret_location)" && \ 
-    echo 1 && \
-    wget -qO- "https://raw.githubusercontent.com/$GITHUB_REPO/master/scripts/pcf-jumpbox-init.sh?$RANDOM" |  bash && \
-    echo 3 && \
+    wget -qO- "https://raw.githubusercontent.com/$GITHUB_REPO/master/scripts/pcf-jumpbox-init.sh?$RANDOM" | bash  &&\
     sudo rm -rf /var/lib/apt/lists/* 
 
 
