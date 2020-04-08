@@ -3,8 +3,8 @@
 #  PROJ_DIR            : Project Directory. All tools will get install under PROJ_DIR/bin. (default: $HOME)
 #  PIVNET_LEGACY_TOKEN : Pivotal Network Token (required) Its **NOT** ending with -r. It looks like DJHASLD7_HSDHA7 (default: none)
 #  TIMEZONE            : Timezone of the host (default:Asua/Singapore)
-#  GIT_REPO            : Git repository to use for supporting items (default: yogendra/dotfiles)
-#  DOTFILES_DIR        : Location to put dotfiles (default: $HOME/code/dotfiles)
+#  GIT_REPO            : Git repository to use for supporting items (default: yogendra/pcf-tools)
+#  PCF_TOOLS_DIR       : Location to put dotfiles (default: $HOME/code/pcf-tools)
 
 # Run
 # GIT_REPO=yogendra/dotfiles wget -qO- "https://raw.githubusercontent.com/${GIT_REPO}/master/scripts/jumpbox-init.sh?nocache"  | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 bash
@@ -21,8 +21,8 @@ echo PROJ_DIR=${PROJ_DIR}
 
 
 [[ -d ${PROJ_DIR}/bin ]]  || mkdir -p ${PROJ_DIR}/bin
-GIT_REPO=${GIT_REPO:-yogendra/dotfiles}
-DOTFILES_DIR=${DOTFILES_DIR:-$HOME/code/dotfiles}
+GIT_REPO=${GIT_REPO:-yogendra/pcf-tools}
+PCF_TOOLS_DIR=${PCF_TOOLS_DIR:-$HOME/code/pcf-tools}
 TIMEZONE=${TIMEZONE:-Asia/Singapore}
 
 sudo ln -fs /usr/share/zoneinfo/$TIMEZONE /etc/localtime
@@ -112,7 +112,7 @@ OS_TOOLS=(\
 sudo apt update && sudo apt install -qqy "${OS_TOOLS[@]}"
 
 
-asset_json=$(cat ${DOTFILES_DIR}/config/assets.json)
+asset_json=$(cat ${PCF_TOOLS_DIR}/config/assets.json)
 function asset_version {
   name=$1
   echo ${asset_json} | jq -r ".[\"$name\"].version"
@@ -334,6 +334,9 @@ wget -qO- https://aka.ms/InstallAzureCLIDeb | sudo bash
 echo Created workspace directory
 mkdir -p $PROJ_DIR/workspace/deployments
 mkdir -p $PROJ_DIR/workspace/tiles
+
+echo Setting shell: bash
+echo "export PATH=$PCF_TOOLS_DIR/scripts:$PATH" >> ~/.bashrc
 
 
 echo <<EOF
