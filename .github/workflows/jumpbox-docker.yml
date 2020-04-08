@@ -9,13 +9,13 @@ jobs:
       secrets:
         image: nginx
         volumes:
-          - $GITHUB_WORKSPACE:/usr/share/nginx/html/
+          - ${{ github.workspace }}:/usr/share/nginx/html
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v2
       - name: Prepare Secrets
         run: |
-          echo "${{ secrets.SECRETS_SH }}" >> $GITHUB_WORKSPACE/secrets.sh
+          echo "${{ secrets.SECRETS_SH }}" >> ${GITHUB_WORKSPACE}/secrets.sh
       - name: Test Secrets Server
         run: |
           secrets="$(docker run --name secrets-consumer --rm -t busybox wget -qO- http://secrets/secrets.sh)"
