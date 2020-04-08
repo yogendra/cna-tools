@@ -3,13 +3,13 @@
 #  PROJ_DIR            : Project Directory. All tools will get install under PROJ_DIR/bin. (default: $HOME)
 #  PIVNET_LEGACY_TOKEN : Pivotal Network Token (required) Its **NOT** ending with -r. It looks like DJHASLD7_HSDHA7 (default: none)
 #  TIMEZONE            : Timezone of the host (default:Asua/Singapore)
-#  GIT_REPO            : Git repository to use for supporting items (default: yogendra/pcf-tools)
+#  GITHUB_REPO         : Git repository to use for supporting items (default: yogendra/pcf-tools)
 #  PCF_TOOLS_DIR       : Location to put dotfiles (default: $HOME/code/pcf-tools)
 
 # Run
-# GIT_REPO=yogendra/dotfiles wget -qO- "https://raw.githubusercontent.com/${GIT_REPO}/master/scripts/jumpbox-init.sh?nocache"  | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 bash
-# Or to put binaries at your preferred location (example: /usr/local/bin), provide PROD_DIR
-# GIT_REPO=yogendra/dotfiles wget -qO- "https://raw.githubusercontent.com/${GIT_REPO}/master/scripts/jumpbox-init.sh?nocache" | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/usr/local bash
+# GITHUB_REPO=yogendra/dotfiles wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/pcf-jumpbox-init.sh?nocache"  | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 bash
+# Or to put binaries at your preferred location (example: /usr/local/bin), provide PROJ_DIR
+# GITHUB_REPO=yogendra/dotfiles wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/pcf-jumpbox-init.sh?nocache" | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/usr/local bash
 
 
 PROJ_DIR=${PROJ_DIR:-$HOME}
@@ -21,7 +21,7 @@ echo PROJ_DIR=${PROJ_DIR}
 
 
 [[ -d ${PROJ_DIR}/bin ]]  || mkdir -p ${PROJ_DIR}/bin
-GIT_REPO=${GIT_REPO:-yogendra/pcf-tools}
+GITHUB_REPO=${GITHUB_REPO:-yogendra/pcf-tools}
 PCF_TOOLS_DIR=${PCF_TOOLS_DIR:-$HOME/code/pcf-tools}
 TIMEZONE=${TIMEZONE:-Asia/Singapore}
 
@@ -116,7 +116,7 @@ OS_TOOLS=(\
 sudo apt update && sudo apt install -qqy "${OS_TOOLS[@]}"
 
 
-asset_json=$(wget -qO- https://raw.githubusercontent.com/${GIT_REPO}/master/config/assets.json)
+asset_json=$(wget -qO- https://raw.githubusercontent.com/${GITHUB_REPO}/master/config/assets.json)
 function asset_version {
   name=$1
   echo ${asset_json} | jq -r ".[\"$name\"].version"
