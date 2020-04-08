@@ -12,7 +12,7 @@ jobs:
           - 80:80
         options: --name secrets-server --hostname secrets-server
         volumes:
-          - ${{ gihub.workspace }}:/usr/share/nginx/html:ro
+          - ${{ github.workspace }}:/usr/share/nginx/html:ro
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v2
