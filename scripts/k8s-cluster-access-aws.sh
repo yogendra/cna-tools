@@ -10,7 +10,7 @@ security_group=${5:-default}
 
 
 echo fetching subnets
-subnets=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id}" "Name=tag:Name,Values=*${subnet_type}*" --query "Subnets[*].SubnetId" --output text)
+subnets=($(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id}" "Name=tag:Name,Values=*${subnet_type}*" --query "Subnets[*].SubnetId" --output text))
 
 echo fetching security group id
 security_group_id=$(aws ec2 describe-security-groups --filters  "Name=vpc-id,Values=${vpc_id}" "Name=group-name,Values=${security_group}" --query "SecurityGroups[0].GroupId" --output text)
@@ -52,8 +52,14 @@ aws elbv2 describe-target-health --target-group-arn ${target_group_arn} --query 
   aws elbv2 deregister-targets --target-group-arn ${target_group_arn} --targets $target_id
 done
 
-echo register all master vms
 
+echo -e "\n${green}Adding kubernetes tags to public subnets for LoadBalancer type service"
+for subnet in "${subnets[@]}"
+do  
+  aws ec2 create-tags --resources "$subnet" --tags Key="kubernetes.io/cluster/service-instance_${cluster_uuid}",Value="shared"
+done
+
+echo register all master vms
 aws ec2 describe-instances --filters "Name=vpc-id,Values=${vpc_id}" \
   "Name=instance-state-name,Values=running" \
   "Name=tag:job,Values=master" \
