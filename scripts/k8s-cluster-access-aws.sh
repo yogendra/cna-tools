@@ -46,13 +46,13 @@ echo get target group arn
 target_group_arn=$(aws elbv2 describe-target-groups  --names ${target_group}  --query "TargetGroups[0].TargetGroupArn" --output text)
 echo target group arn: $target_group_arn
 
-existing_targets=($(aws elbv2 describe-target-health --target-group-arn ${target_group_arn} --query 'TargetHealthDescriptions[*].Target.Id' --output text ))
-for existing_target in  "${existing_targets[@]}"
-do
-  echo deregister exiting host $exiting_target
-  target_id="Id=${exiting_target}"
-  aws elbv2 deregister-targets --target-group-arn ${target_group_arn} --targets $target_id
-done
+# existing_targets=($(aws elbv2 describe-target-health --target-group-arn ${target_group_arn} --query 'TargetHealthDescriptions[*].Target.Id' --output text ))
+# for existing_target in  "${existing_targets[@]}"
+# do
+#   echo deregister exiting host $exiting_target
+#   target_id="Id=${exiting_target}"
+#   aws elbv2 deregister-targets --target-group-arn ${target_group_arn} --targets $target_id
+# done
 
 
 echo register all master vms
