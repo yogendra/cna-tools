@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# USAGE: k8s-cluster-lb.sh vpc_id cluster_name cluster_uuid [security_group_name]
+# USAGE: k8s-cluster-lb.sh vpc_id cluster_name cluster_uuid subnet_types [security_group_name]
 set -e 
 
 vpc_id=$1
@@ -8,21 +8,29 @@ cluster_uuid=$3
 subnet_type=$4
 security_group=${5:-default}
 
-echo "VPC:$vpc_id, cluster:$cluster_name($cluster_uuid) subnet_type:$subnet_type secgrp:$security_group"
-
 
 echo fetching subnets
 subnets=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id}" "Name=tag:Name,Values=*${subnet_type}*" --query "Subnets[*].SubnetId" --output text)
 
 echo fetching security group id
-security_group_id=$(aws ec2 describe-security-groups  --filters "Name=vpc-id,Values=${vpc_id}" --group-name ${security_group} --query "SecurityGroups[0].GroupId")
+security_group_id=$(aws ec2 describe-security-groups --filters  "Name=vpc-id,Values=${vpc_id}" "Name=group-name,Values=${security_group}" --query "SecurityGroups[0].GroupId" --output text)
 
 lb_name=${lb_name:-k8s-master-${cluster_name}}
 target_group=${target_group:-${lb_name}-tg-8443}
-echo "vpc: ${vpc_id}  $lb_name (subnets:$subnets) (tgtgrp:$target_group) (secgrpid:$security_group_id)"
+cat <<EOF
+cluster name:      ${cluster_name}
+cluster_uuid:      ${cluster_uuid}
+vpc:               ${vpc_id}  
+lb:                ${lb_name}
+subnet ids:        ${subnets}
+target group name: ${target_group}
+security group:    ${security_group}[${security_group_id}]
+EOF
+echo -n "Review information above and press control-c to quit/cancel. Press enter to proceed"
+read quit
 
 lb_created=0
-if ! aws elbv2 describe-load-balancers --name ${lb_name}  &> /dev/null; then
+if ! aws elbv2 describe-load-balancers --names ${lb_name} &> /dev/null; then
   echo lb creation
   lb_created=1
   aws elbv2 create-load-balancer --name ${lb_name} --type network  --scheme internal  --subnets ${subnets}
@@ -30,13 +38,13 @@ fi
 echo get lb arn
 lb_arn=$(aws elbv2 describe-load-balancers --names ${lb_name} --query "LoadBalancers[0].LoadBalancerArn"  --output text)
 
-if ! aws elbv2 describe-target-groups --name ${target_group} &> /dev/null; then
+if ! aws elbv2 describe-target-groups --names ${target_group} &> /dev/null; then
   echo create target group
   aws elbv2 create-target-group --name ${target_group} --protocol TCP --port 8443 --vpc-id ${vpc_id}
 fi
 echo get target group arn
-target_group_arn=$(aws elbv2 describe-target-groups  --name ${traget_group}  --query "TargetGroups[0].TargetGroupArn" --output text)
-echo tg arn: $target_group_arn
+target_group_arn=$(aws elbv2 describe-target-groups  --names ${target_group}  --query "TargetGroups[0].TargetGroupArn" --output text)
+echo target group arn: $target_group_arn
 
 aws elbv2 describe-target-health --target-group-arn ${target_group_arn} --query 'TargetHealthDescriptions[*].Target.Id' --output text  | while read exiting_target; do
   echo deregister exiting host $exiting_target
