@@ -7,9 +7,9 @@
 #  PCF_TOOLS_DIR       : Location to put dotfiles (default: $HOME/code/pcf-tools)
 
 # Run
-# GITHUB_REPO=yogendra/dotfiles wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/pcf-jumpbox-init.sh?nocache"  | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 bash
+# GITHUB_REPO=yogendra/pcf-tools wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/pcf-jumpbox-init.sh?nocache"  | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 bash
 # Or to put binaries at your preferred location (example: /usr/local/bin), provide PROJ_DIR
-# GITHUB_REPO=yogendra/dotfiles wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/pcf-jumpbox-init.sh?nocache" | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/usr/local bash
+# GITHUB_REPO=yogendra/pcf-tools wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/pcf-jumpbox-init.sh?nocache" | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/usr/local bash
 
 
 PROJ_DIR=${PROJ_DIR:-$HOME}
