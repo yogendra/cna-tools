@@ -22,7 +22,7 @@ cluster name:      ${cluster_name}
 cluster_uuid:      ${cluster_uuid}
 vpc:               ${vpc_id}  
 lb:                ${lb_name}
-subnet ids:        ${subnets}
+subnet ids:        ${subnets[@]}
 target group name: ${target_group}
 security group:    ${security_group}[${security_group_id}]
 EOF
@@ -46,18 +46,12 @@ echo get target group arn
 target_group_arn=$(aws elbv2 describe-target-groups  --names ${target_group}  --query "TargetGroups[0].TargetGroupArn" --output text)
 echo target group arn: $target_group_arn
 
-aws elbv2 describe-target-health --target-group-arn ${target_group_arn} --query 'TargetHealthDescriptions[*].Target.Id' --output text  | while read exiting_target; do
+for existing_target in ( $(aws elbv2 describe-target-health --target-group-arn ${target_group_arn} --query 'TargetHealthDescriptions[*].Target.Id' --output text ) ) do
   echo deregister exiting host $exiting_target
   target_id="Id=${exiting_target}"
   aws elbv2 deregister-targets --target-group-arn ${target_group_arn} --targets $target_id
 done
 
-
-echo -e "\n${green}Adding kubernetes tags to public subnets for LoadBalancer type service"
-for subnet in "${subnets[@]}"
-do  
-  aws ec2 create-tags --resources "$subnet" --tags Key="kubernetes.io/cluster/service-instance_${cluster_uuid}",Value="shared"
-done
 
 echo register all master vms
 aws ec2 describe-instances --filters "Name=vpc-id,Values=${vpc_id}" \
@@ -70,5 +64,14 @@ aws ec2 describe-instances --filters "Name=vpc-id,Values=${vpc_id}" \
   aws elbv2 register-targets --target-group-arn ${target_group_arn} --targets Id=$vm
 done
 
+
 echo Add Listner
 aws elbv2 create-listener --load-balancer-arn ${lb_arn} --protocol TCP --port 8443 --default-actions Type=forward,TargetGroupArn=${target_group_arn}
+
+
+
+echo -e "\n${green}Adding kubernetes tags to public subnets for LoadBalancer type service"
+for subnet in "${subnets[@]}"
+do  
+  aws ec2 create-tags --resources "$subnet" --tags Key="kubernetes.io/cluster/service-instance_${cluster_uuid}",Value="shared"
+done
