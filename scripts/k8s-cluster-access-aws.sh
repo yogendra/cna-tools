@@ -17,8 +17,8 @@ subnets=$(aws ec2 describe-subnets --filters "Name=vpc-id,Values=${vpc_id}" "Nam
 echo fetching security group id
 security_group_id=$(aws ec2 describe-security-groups  --filters "Name=vpc-id,Values=${vpc_id}" --group-name ${security_group} --query "SecurityGroups[0].GroupId")
 
-lb_name="k8s-master-${cluster_name}"
-target_group="${lb_name}-tg-8443"
+lb_name=${lb_name:-k8s-master-${cluster_name}}
+target_group=${target_group:-${lb_name}-tg-8443}
 echo "vpc: ${vpc_id}  $lb_name (subnets:$subnets) (tgtgrp:$target_group) (secgrpid:$security_group_id)"
 
 lb_created=0
