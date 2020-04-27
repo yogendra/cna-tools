@@ -36,4 +36,4 @@ jobs:
       - name: testService
 #         uses: docker://alpine:3.8
         run: |
-          docker build -f test-build.Dockerfile --build-arg url=http://secrets-server:${{ job.services.secrets-server.ports['80'] }}/README.md -t test-build .
+          docker build -f test-build.Dockerfile --build-arg url=http://secrets-server/README.md -t test-build .
