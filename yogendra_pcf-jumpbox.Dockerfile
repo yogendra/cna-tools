@@ -1,4 +1,4 @@
-FROM ubuntu:latest as base
+FROM ubuntu:lts as base
 
 ADD config/sources.list /etc/apt/sources.list
 
