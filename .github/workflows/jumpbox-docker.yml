@@ -10,7 +10,7 @@ jobs:
         image: nginx
         ports:
           - 80/tcp
-#         options: --name secrets-server --hostname secrets-server
+        options: --name secrets-server --hostname secrets-server
         volumes:
           - ${{ github.workspace }}:/usr/share/nginx/html:ro
     steps:
@@ -19,21 +19,17 @@ jobs:
       - name: Prepare Secrets
         run: |
           echo "${{ secrets.SECRETS_SH }}" >> $GITHUB_WORKSPACE/config/secrets.sh
-#       - name: Build Docker Image
-#         run: |
-#           DOCKER_BUILD_NETWORK=$(docker network ls -f label=d00b33 --format "{{.Name}}" | head -1)
-#           echo DOCKER_BUILD_NETWORK=$DOCKER_BUILD_NETWORK
-#           docker build --network $DOCKER_BUILD_NETWORK -t ${{secrets.REGISTRY_ADDRESS}}/${{ secrets.REGISTRY_USERNAME}}/pcf-jumpbox:latest -f yogendra_pcf-jumpbox.Dockerfile .
-#       - name: Test Docker Image
-#         run: |
-#           echo WIP
-#       - name: Login to Docker Registry
-#         run: |
-#           docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ secrets.REGISTRY_ADDRESS }}
-#       - name: Push Image
-#         run: |
-#           docker push ${{secrets.REGISTRY_ADDRESS}}/${{ secrets.REGISTRY_USERNAME}}/pcf-jumpbox:latest
-      - name: testService
-#         uses: docker://alpine:3.8
+      - name: Build Docker Image
         run: |
-          docker build -f test-build.Dockerfile --build-arg url=http://secrets-server/README.md -t test-build .
+          DOCKER_BUILD_NETWORK=$(docker inspect secrets-server -f '{{range $net, $ob := .NetworkSettings.Networks }}{{$net}}{{end}}')
+          echo DOCKER_BUILD_NETWORK=$DOCKER_BUILD_NETWORK
+          docker build --network $DOCKER_BUILD_NETWORK -t ${{secrets.REGISTRY_ADDRESS}}/${{ secrets.REGISTRY_USERNAME}}/pcf-jumpbox:latest -f yogendra_pcf-jumpbox.Dockerfile .
+      - name: Test Docker Image
+        run: |
+          echo WIP
+      - name: Login to Docker Registry
+        run: |
+          docker login -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }} ${{ secrets.REGISTRY_ADDRESS }}
+      - name: Push Image
+        run: |
+          docker push ${{secrets.REGISTRY_ADDRESS}}/${{ secrets.REGISTRY_USERNAME}}/pcf-jumpbox:latest
