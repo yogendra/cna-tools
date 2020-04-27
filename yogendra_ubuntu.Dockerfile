@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:lts
 ADD config/sources.list /etc/apt/sources.list
 
 RUN apt update && \
