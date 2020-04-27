@@ -8,7 +8,8 @@ jobs:
     services:
       secrets-server:
         image: nginx
-        ports:
+#         ports:
+#           - 80:80
 #         options: --name secrets-server --hostname secrets-server
         volumes:
           - ${{ github.workspace }}:/usr/share/nginx/html:ro
@@ -35,4 +36,4 @@ jobs:
       - name: testService
 #         uses: docker://alpine:3.8
         run: |
-          docker build -f test-build.Dockerfile -t test-build
+          docker build -f test-build.Dockerfile --build-arg url=http://nginx:${{ job.services.secrets-server.ports[80] }}/README.md -t test-build
