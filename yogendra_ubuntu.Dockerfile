@@ -1,4 +1,4 @@
-FROM ubuntu:lts
+FROM ubuntu:bionic
 ADD config/sources.list /etc/apt/sources.list
 
 RUN apt update && \

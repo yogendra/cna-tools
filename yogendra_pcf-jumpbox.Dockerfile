@@ -1,4 +1,4 @@
-FROM ubuntu:lts as base
+FROM ubuntu:bionic as base
 
 ADD config/sources.list /etc/apt/sources.list
 
