@@ -1,4 +1,4 @@
-FROM yogendra/ubuntu:latest
+FROM yogendra/ubuntu:lts
 ADD config/sources.list /etc/apt/sources.list
 
 RUN apt update && \
