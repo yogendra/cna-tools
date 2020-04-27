@@ -4,7 +4,7 @@ ADD config/sources.list /etc/apt/sources.list
 
 RUN set -e && \
     apt update && \
-    apt -qqy install wget sudo && \
+    apt -qqy install curl wget sudo && \
     adduser --disabled-password --gecos '' pcf && \
     adduser pcf sudo && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
