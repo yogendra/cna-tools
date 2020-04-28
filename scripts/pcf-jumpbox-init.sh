@@ -68,6 +68,7 @@ OS_TOOLS=(\
     wamerican \
     wget \
     whois \
+    nginx \
     )
 sudo apt update && sudo apt install -qqy "${OS_TOOLS[@]}"
 
