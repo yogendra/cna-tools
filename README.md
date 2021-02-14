@@ -53,7 +53,7 @@ This gist has scripts to quickly setup a jumpbox.
 1. (**Optional**) test server by running another container as follows
 
    ```bash
-   docker run --name secrets-consumer --rm --network buildnet -t busybox wget -qO- http://secrets/config/secrets.sh
+   docker run --name secrets-consumer --rm --network buildnet -t busybox wget -qO- http://secrets/config/secrets.sh | wc -l
    ```
 
 1. Run the build with following command

@@ -14,13 +14,19 @@ ENV PROJ_DIR=/home/pcf
 WORKDIR /home/pcf
 
 FROM base
-ARG build_secrets_location=http://secrets-server/config/secrets.sh
+ARG build_secrets_location=http://secrets/config/secrets.sh
 
+RUN wget -qO- $build_secrets_location 
 
-RUN set -e &&\    
-    eval "$(wget -qO- $build_secrets_location)" && \ 
-    wget -qO- "https://raw.githubusercontent.com/$GITHUB_REPO/master/scripts/pcf-jumpbox-init.sh?$RANDOM" | bash  &&\
-    sudo rm -rf /var/lib/apt/lists/* 
+RUN echo loading secrets from $build_secrets_location && \
+    eval "$(wget -qO- $build_secrets_location)" && \
+    echo Getting init script from : "https://raw.githubusercontent.com/$GITHUB_REPO/master/scripts/pcf-jumpbox-init.sh?$RANDOM" && \
+    wget -q "https://raw.githubusercontent.com/$GITHUB_REPO/master/scripts/pcf-jumpbox-init.sh?$RANDOM" -o /tmp/init.sh && \
+    chmod a+x /tmp/init.sh
+
+RUN /tmp/init.sh
+
+RUN sudo rm -rf /var/lib/apt/lists/* 
 
 
 VOLUME /home/pcf/workspace
