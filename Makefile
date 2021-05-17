@@ -1,7 +1,7 @@
 
 
 .PHONY: all
-all: yogendra_ubuntu pcfjupbox
+all: yogendra_ubuntu pcfjupbox kubeshell
 
 ubuntu: yogendra_ubuntu_bionic yogendra_ubuntu_user yogendra_ubuntu_workspace 
 
@@ -29,3 +29,7 @@ pcfjumpbox:
 	@docker build -f yogendra_pcf-jumpbox.Dockerfile -t yogendra/pcf-jumpbox:latest .
 	- docker stop secrets 
 	- docker network rm  buildnet
+
+kubeshell:
+	@docker build -t yogendra/kubeshell -f yogendra_kubeshell.Dockerfile .
+	- docker push yogendra/kubeshell 
