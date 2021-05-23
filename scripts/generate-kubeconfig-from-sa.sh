@@ -1,37 +1,34 @@
-# Point to the internal API server hostname
-APISERVER=https://kubernetes.default.svc
+#!/bin/bash
+set -eo pipefail
 
-# Path to ServiceAccount token
-SERVICEACCOUNT=/var/run/secrets/kubernetes.io/serviceaccount
+saname=${1?"Service Account name missing: generate-sa-kubeconfig.sh <service-account> <namespace>"}
+namespace=${2?"Namespace missing: generate-sa-kubeconfig.sh <service-account> <namespace>"}
 
-# Read this Pod's namespace
-NAMESPACE=$(cat ${SERVICEACCOUNT}/namespace)
+context=$(kubectl config  current-context)
+cluster=$(kubectl config  view --flatten -o jsonpath="{.contexts[?(@.name == \"$context\")].context.cluster}")
+name=$(kubectl -n ${namespace} get sa ${saname} -o jsonpath='{.secrets[0].name}')
 
-# Read the ServiceAccount bearer token
-TOKEN=$(cat ${SERVICEACCOUNT}/token)
+ca=$(kubectl -n ${namespace} get secret/$name -o jsonpath='{.data.ca\.crt}')
+token=$(kubectl -n ${namespace}  get secret/$name -o go-template='{{ .data.token | base64decode }}')
+server=$(kubectl config  view --flatten --minify -o jsonpath="{.clusters[?(@.name == \"$cluster\")].cluster.server}")
 
-# Reference the internal certificate authority (CA)
-CACERT=${SERVICEACCOUNT}/ca.crt
-
-mkdir -p $HOME/.kube
-# Explore the API with TOKEN
-cat <<EOF > $HOME/.kube/config
+cat <<EOF
 apiVersion: v1
 kind: Config
 clusters:
-- name: local
+- name: ${cluster}
   cluster:
-    certificate-authority: ${CACERT}
-    server: ${APISERVER}
+    certificate-authority-data: ${ca}
+    server: ${server}
 contexts:
-- name: local
+- name: ${saname}@${cluster}
   context:
-    cluster: local
-    namespace: ${NAMESPACE}
-    user: serviceaccount
-current-context: local
+    cluster: ${cluster}
+    namespace: ${namespace}
+    user: ${saname}
+current-context: ${saname}@${cluster}
 users:
-- name: serviceaccount
+- name: ${saname}
   user:
-    tokenFile: ${SERVICEACCOUNT}/token
+    token: ${token}
 EOF
