@@ -1,4 +1,4 @@
-deb mirror://mirrors.ubuntu.com/mirrors.txt bionic main restricted universe multiverse
-deb mirror://mirrors.ubuntu.com/mirrors.txt bionic-updates main restricted universe multiverse
-deb mirror://mirrors.ubuntu.com/mirrors.txt bionic-backports main restricted universe multiverse
-deb mirror://mirrors.ubuntu.com/mirrors.txt bionic-security main restricted universe multiverse
+deb [trusted=yes] mirror://mirrors.ubuntu.com/mirrors.txt focal main restricted universe multiverse
+deb [trusted=yes] mirror://mirrors.ubuntu.com/mirrors.txt focal-updates main restricted universe multiverse
+deb [trusted=yes] mirror://mirrors.ubuntu.com/mirrors.txt focal-backports main restricted universe multiverse
+deb [trusted=yes] mirror://mirrors.ubuntu.com/mirrors.txt focal-security main restricted universe multiverse
