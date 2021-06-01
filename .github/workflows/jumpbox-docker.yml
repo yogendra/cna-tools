@@ -1,5 +1,4 @@
 name: Jumpbox Docker Build
-runs-on: self-hosted
 
 on: [push]
 
