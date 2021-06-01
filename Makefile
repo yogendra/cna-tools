@@ -10,15 +10,18 @@ yogendra_ubuntu_bionic:
 	@docker push yogendra/ubuntu:latest 
 	@docker push yogendra/ubuntu:bionic 
 
-yogendra_ubuntu_user:
+yogendra_ubuntu_user: yogendra_ubuntu_bionic
 	@docker build -f yogendra_ubuntu_user.Dockerfile -t yogendra/ubuntu:user .
 	@docker push yogendra/ubuntu:user 
 
-yogendra_ubuntu_workspace:
+yogendra_ubuntu_workspace: yogendra_ubuntu_bionic
 	@docker build -f yogendra_ubuntu_workspace.Dockerfile -t yogendra/ubuntu:workspace -t yogendra/workspace:latest .
 	@docker push yogendra/ubuntu:workspace
 	@docker push yogendra/workspace:latest
 
+
+pcfjumpbox2:	
+	@DOCKER_BUILDKIT=1  docker build  --secret id=jumbox-secrets,src=${PWD}/script/secrets.sh -f yogendra_pcf-jumpbox2.Dockerfile -t yogendra/pcf-jumpbox2:latest .
 
 pcfjumpbox: 
 	- docker stop secrets 
@@ -30,6 +33,6 @@ pcfjumpbox:
 	- docker stop secrets 
 	- docker network rm  buildnet
 
-kubeshell:
+kubeshell: yogendra_ubuntu_user
 	@docker build -t yogendra/kubeshell -f yogendra_kubeshell.Dockerfile .
 	- docker push yogendra/kubeshell 
