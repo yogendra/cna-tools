@@ -46,14 +46,7 @@ function _wget {
     [[ -z $_DEBUG ]] && wget -q $*
 }
 function github_api {
-    if [[ -z $GITHUB_TOKEN ]]; then
-        _debug "github_api: no token"
-        _wget -O- https://api.github.com$@
-    else
-        _debug "github_api: got token"        
-        _wget  --header "'authorization: Bearer $GITHUB_TOKEN'" -O- https://api.github.com$@
-    fi
-    sleep 1
+    gh api $@
 }
 function github_version { 
     repo=$1
@@ -79,7 +72,7 @@ function github_asset {
     version=$4
     version=$(github_version "$repo" "$version")
     
-    jq_exp=".assets[] | select(.name|test(\"$exp\"))|.browser_download_url"
+    jq_exp="[.assets[] | select(.name|test(\"$exp\"))][0].browser_download_url"
     asset_url=$(github_api  /repos/${repo}/releases/tags/${version} | jq -r "${jq_exp}")
 
     _debug "product:$product repo:$repo exp:$exp version:$version jq_exp:$jq_exp asset_url:$asset_url"
@@ -99,7 +92,6 @@ add_asset "kubectl" "custom" "$version" "https://storage.googleapis.com/kubernet
 
 add_asset "minio-mc" "custom" "latest" "https://dl.min.io/client/mc/release/linux-amd64/mc"
 
-pivnet_asset "pivotal-function-service"
 pivnet_asset "pivotal-container-service"
 pivnet_asset "p-scheduler"
 pivnet_asset "pcf-app-autoscaler" 
@@ -116,10 +108,8 @@ github_asset credhub cloudfoundry-incubator/credhub-cli credhub-linux-.\*.tgz\$
 github_asset pack buildpacks/pack pack-v.\*-linux.tgz\$
 github_asset texplate pivotal-cf/texplate linux_amd64
 github_asset docker-machine docker/machine Linux-x86_64
-github_asset riff projectriff/cli linux-amd64 
 github_asset uaa cloudfoundry-incubator/uaa-cli linux-amd64
 github_asset pivnet pivotal-cf/pivnet-cli linux-amd64
-github_asset riff projectriff/cli  linux-amd64 
 github_asset bat sharkdp/bat x86_64-unknown-linux-gnu 
 github_asset direnv direnv/direnv linux-amd64
 
@@ -127,7 +117,7 @@ JSON="$JSON
 }"
 
 
-echo "$JSON" | jq -S
+echo "$JSON" | tee /tmp/asset-temp.json  | jq -S
 
 
 
