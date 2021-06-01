@@ -7,9 +7,9 @@
 #  PCF_TOOLS_DIR       : Location to put dotfiles (default: $HOME/code/pcf-tools)
 
 # Run
-# GITHUB_REPO=yogendra/pcf-tools wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/pcf-jumpbox-init.sh?nocache"  | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 bash
+# GITHUB_REPO=yogendra/pcf-tools wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/tanzu-jumpbox-init.sh?nocache"  | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 bash
 # Or to put binaries at your preferred location (example: /usr/local/bin), provide PROJ_DIR
-# GITHUB_REPO=yogendra/pcf-tools wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/pcf-jumpbox-init.sh?nocache" | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/usr/local bash
+# GITHUB_REPO=yogendra/pcf-tools wget -qO- "https://raw.githubusercontent.com/${GITHUB_REPO}/master/scripts/tanzu-jumpbox-init.sh?nocache" | PIVNET_LEGACY_TOKEN=DJHASLD7_HSDHA7 PROJ_DIR=/usr/local bash
 
 
 PROJ_DIR=${PROJ_DIR:-$HOME}
@@ -116,8 +116,14 @@ OS_TOOLS=(\
     )
 sudo apt update && sudo apt install -qqy "${OS_TOOLS[@]}"
 
+asset_json=""
+if [[ -f $PROJ_DIR/config/asset.json  ]]
+then
+  asset_json=$(cat $PROJ_DIR/config/asset.json)
+else
+  asset_json=$(wget -qO- https://raw.githubusercontent.com/${GITHUB_REPO}/master/config/assets.json)
+fi
 
-asset_json=$(wget -qO- https://raw.githubusercontent.com/${GITHUB_REPO}/master/config/assets.json)
 function asset_version {
   name=$1
   echo ${asset_json} | jq -r ".[\"$name\"].version"
@@ -195,12 +201,6 @@ echo Downloading: docker-machine from ${URL}
 wget -q ${URL}  -O ${PROJ_DIR}/bin/docker-machine
 chmod a+x ${PROJ_DIR}/bin/docker-machine
 
-# Get updated url at https://github.com/projectriff/cli/releases/latest
-URL="$(asset_url riff)"
-echo Downloading: riff from ${URL}
-wget -q ${URL} -O- | tar -C ${PROJ_DIR}/bin -xz ./riff
-chmod a+x ${PROJ_DIR}/bin/riff
-
 # Get updated url at https://github.com/cloudfoundry-incubator/uaa-cli/releases/latest
 URL="$(asset_url uaa)"
 echo Downloading: uaa from ${URL}
@@ -224,32 +224,23 @@ chmod a+x ${PROJ_DIR}/bin/pivnet
 
 # Get updated url at https://network.pivotal.io/products/pivotal-container-service/
 VERSION=$(asset_version pivotal-container-service)
+echo PivNet Download: TKGI client ${VERSION}
+om download-product -t "${PIVNET_LEGACY_TOKEN}" -o /tmp -v "${VERSION}"  -p pivotal-container-service --pivnet-file-glob='tkgi-linux-amd64-*'
+mv /tmp/tkgi-linux-amd64-* ${PROJ_DIR}/bin/tkgi
+chmod a+x ${PROJ_DIR}/bin/tkgi
+
+#Get updated information from https://network.pivotal.io/products/pivotal-container-service
 echo PivNet Download: PKS client ${VERSION}
 om download-product -t "${PIVNET_LEGACY_TOKEN}" -o /tmp -v "${VERSION}"  -p pivotal-container-service --pivnet-file-glob='pks-linux-amd64-*'
 mv /tmp/pks-linux-amd64-* ${PROJ_DIR}/bin/pks
 chmod a+x ${PROJ_DIR}/bin/pks
 
-# Get updated url at https://network.pivotal.io/products/pivotal-function-service/
-VERSION="$(asset_version pivotal-function-service)"
-echo PivNet Download: PFS client ${VERSION}
-om download-product -t "${PIVNET_LEGACY_TOKEN}" -o /tmp -v "${VERSION}"  -p pivotal-function-service --pivnet-file-glob='pfs-cli-linux-amd64-*'
-mv /tmp/pfs-cli-linux-amd64-* ${PROJ_DIR}/bin/pfs
-chmod a+x ${PROJ_DIR}/bin/pfs
-
-om download-product -t "${PIVNET_LEGACY_TOKEN}" -o /tmp -v "${VERSION}" -p pivotal-function-service --pivnet-file-glob='duffle-linux-*'
-mv /tmp/duffle-linux-* ${PROJ_DIR}/bin/duffle
-chmod a+x ${PROJ_DIR}/bin/duffle
-
-# Download build service client
-VERSION="$(asset_version build-service)"
-echo PivNet Download: Pivotal Build Service client ${VERSION}
-om download-product -t "${PIVNET_LEGACY_TOKEN}" -o /tmp -v "${VERSION}"  -p build-service --pivnet-file-glob="pb-${VERSION}-linux"
-mv /tmp/pb-${VERSION}-linux ${PROJ_DIR}/bin/pb
-chmod a+x ${PROJ_DIR}/bin/pb
-
-om download-product -t "${PIVNET_LEGACY_TOKEN}" -o /tmp -v "${VERSION}"  -p build-service --pivnet-file-glob="duffle-${VERSION}-linux"
-mv /tmp/duffle-${VERSION}-linux ${PROJ_DIR}/bin/pb-duffle
-chmod a+x ${PROJ_DIR}/bin/pb-duffle
+# Get update utl at https://network.pivotal.io/products/build-service/
+VERSION="$(asset_version tanzu-build-service)"
+echo PivNet Download: Tanzu Build Service client ${VERSION}
+om download-product -t "${PIVNET_LEGACY_TOKEN}" -o /tmp -v "${VERSION}"  -p build-service --pivnet-file-glob="kp-linux-${VERSION}"
+mv /tmp/kp-linux-${VERSION} ${PROJ_DIR}/bin/kp
+chmod a+x ${PROJ_DIR}/bin/kp
 
 
 # Get updated url at https://network.pivotal.io/products/p-scheduler
@@ -300,6 +291,8 @@ mkdir -p $PROJ_DIR/workspace/tiles
 echo Setting shell: bash
 echo "export PATH=$PCF_TOOLS_DIR/scripts:$PATH" >> ~/.bashrc
 
+
+wget -O- https://carvel.dev/install.sh | bash
 
 echo <<EOF
 Create your SSH keys
