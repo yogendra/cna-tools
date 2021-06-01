@@ -32,53 +32,16 @@ This gist has scripts to quickly setup a jumpbox.
 
    - Replace `<CHANGE_ME>` with proper values.
    - `PIVNET_LEGACY_TOKEN` is token form [Pivnet Profile Page][pivnet-profile]. This is **required**
-   - `GITHUB_TOKEN` is used for accessin github. This is useful if you hit API access limits.
+   - `GITHUB_TOKEN` is used for accessing github. This is useful if you hit API access limits.
    - `GITHUB_REPO` is the repository on github that you want to use for init scripts
    - `TIMEZONE` is the timezone you want to set in the destination image
 
    **NOTE**: `GITHUB_OPTIONS` is optional and should be used if you run into API limit restrictions.
 
-1. Create a docker network
+1. Build with make
 
    ```bash
-   docker network create buildnet
-   ```
-
-1. Run a webserver to host secrets
-
-   ```bash
-   docker run --name secrets --rm --volume $PWD:/usr/share/nginx/html:ro --network buildnet -d nginx
-   ```
-
-1. (**Optional**) test server by running another container as follows
-
-   ```bash
-   docker run --name secrets-consumer --rm --network buildnet -t busybox wget -qO- http://secrets/config/secrets.sh | wc -l
-   ```
-
-1. Run the build with following command
-
-   ```bash
-   docker build --no-cache --network buildnet --tag yogendra/pcf-jumpbox:latest -f yogendra_pcf-jumpbox.Dockerfile .
-   ```
-
-1. Test your container
-
-   ```bash
-   docker run --rm -it yogendra/pcf-jumpbox:latest -- ls -l bin/
-
-   ```
-
-1. Stop secrets webserver
-
-   ```bash
-   docker stop secrets
-   ```
-
-1. Remove `buildnet`
-
-   ```bash
-    docker network rm  buildnet
+    make tanzujumpbox
    ```
 
 [pivnet-profile]: https://network.pivotal.io/users/dashboard/edit-profile
