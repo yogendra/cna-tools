@@ -5,15 +5,7 @@ on: [push]
 
 jobs:
   docker-build:
-    runs-on: self-hosted
-    services:
-      secrets-server:
-        image: nginx
-        ports:
-          - 80/tcp
-        options: --name secrets-server --hostname secrets-server
-        volumes:
-          - ${{ github.workspace }}:/usr/share/nginx/html:ro
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v2
@@ -22,9 +14,7 @@ jobs:
           echo "${{ secrets.SECRETS_SH }}" >> $GITHUB_WORKSPACE/config/secrets.sh
       - name: Build Docker Image
         run: |
-          DOCKER_BUILD_NETWORK=$(docker inspect secrets-server -f '{{range $net, $ob := .NetworkSettings.Networks }}{{$net}}{{end}}')
-          echo DOCKER_BUILD_NETWORK=$DOCKER_BUILD_NETWORK
-          docker build --network $DOCKER_BUILD_NETWORK -t ${{secrets.REGISTRY_ADDRESS}}/${{ secrets.REGISTRY_USERNAME}}/pcf-jumpbox:latest -f yogendra_pcf-jumpbox.Dockerfile .
+          make all
       - name: Test Docker Image
         run: |
           echo WIP
