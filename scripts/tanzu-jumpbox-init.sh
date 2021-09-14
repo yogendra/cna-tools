@@ -264,11 +264,11 @@ om download-product -t "${PIVNET_LEGACY_TOKEN}" -o /tmp --product-version "${VER
 cf install-plugin -f /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 rm /tmp/pcf-event-alerts-cli-plugin-linux64-binary-*
 
-echo Installing Keybase cli
-wget -q https://prerelease.keybase.io/keybase_amd64.deb -O /tmp/keybase_amd64.deb 
-sudo apt install -qqy /tmp/keybase_amd64.deb
-rm /tmp/keybase_amd64.deb 
-run_keybase
+# echo Installing Keybase cli
+# wget -q https://prerelease.keybase.io/keybase_amd64.deb -O /tmp/keybase_amd64.deb 
+# sudo apt install -qqy /tmp/keybase_amd64.deb
+# rm /tmp/keybase_amd64.deb 
+# run_keybase
 
 echo Installing minio-mc
 URL="$(asset_url minio-mc)"
