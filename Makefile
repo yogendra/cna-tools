@@ -1,10 +1,8 @@
-
-
 .PHONY: all
 all: yogendra_ubuntu tanzujumpbox kubeshell
 
 yogendra_ubuntu: 
-	@@DOKER_BUILDKIT=1 docker build  --progress plain -f yogendra_ubuntu.Dockerfile -t yogendra/ubuntu:latest  .
+	@DOKER_BUILDKIT=1 docker build  --progress plain -f yogendra_ubuntu.Dockerfile -t yogendra/ubuntu:latest  .
 	@docker push yogendra/ubuntu:latest
 
 
@@ -13,5 +11,5 @@ tanzujumpbox: yogendra_ubuntu
   @docker push yogendra/tanzu-jumpbox:latest
 
 kubeshell: yogendra_ubuntu
-	@@DOKER_BUILDKIT=1 docker build  --progress plain -t yogendra/kubeshell -f yogendra_kubeshell.Dockerfile .
+	@DOKER_BUILDKIT=1 docker build  --progress plain -t yogendra/kubeshell -f yogendra_kubeshell.Dockerfile .
 	- docker push yogendra/kubeshell 
