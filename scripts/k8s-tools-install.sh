@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
+sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-curl -L "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" -o $HOME/bin/kubectl 
-chmod a+x $HOME/bin/kubectl
+
+sudo apt-get update
+sudo apt-get install -y kubectl
 
 cat <<EOF >> ~/.bashrc
 export PATH=$HOME/.local/bin:$HOME/.krew/bin:$PATH
@@ -21,10 +24,10 @@ rm -rf $HOME/Downloads/*.tar.gz
   set -x; cd "$(mktemp -d)" &&
   OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
   ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
-  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.tar.gz" &&
-  tar zxvf krew.tar.gz &&
-  KREW=./krew-"${OS}_${ARCH}" &&
-  "$KREW" install krew
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
 )
 
 kubectl krew install access-matrix cert-manager ctx konfig ns tail
