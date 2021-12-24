@@ -46,7 +46,7 @@ tanzu_jumpbox:	docker_build_args = --secret id=jumpbox-secrets,src=${ROOT_DIR}/c
 ########################################################################################################################
 
 $(images):
-	@echo DOCKER_BUILDKIT=1 docker buildx build \
+	DOCKER_BUILDKIT=1 docker buildx build \
 		--platform linux/amd64 \
 		--progress plain \
 		-t docker.io/$(image_name):latest \
@@ -56,9 +56,9 @@ $(images):
 		-f $(docker_file) \
 		$(docker_build_args) \
 		${ROOT_DIR}
-	@echo docker push docker.io/$(image_name):latest
-	@echo docker push docker.io/$(image_name):${COMMIT}
-	@echo docker push ghcr.io/$(image_name):latest
-	@echo docker push ghcr.io/$(image_name):${COMMIT}
+	docker push docker.io/$(image_name):latest
+	docker push docker.io/$(image_name):${COMMIT}
+	docker push ghcr.io/$(image_name):latest
+	docker push ghcr.io/$(image_name):${COMMIT}
 
 ########################################################################################################################
