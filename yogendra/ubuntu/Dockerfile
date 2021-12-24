@@ -1,4 +1,5 @@
 FROM ubuntu:latest
+LABEL org.opencontainers.image.source https://github.com/yogendra/cna-tools
 ADD config/sources.list /etc/apt/sources.list
 ENV TIMEZONE=Asia/Singapore
 

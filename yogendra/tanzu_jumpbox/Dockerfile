@@ -1,5 +1,5 @@
 FROM yogendra/ubuntu as base
-
+LABEL org.opencontainers.image.source https://github.com/yogendra/cna-tools
 
 ENV PROJ_DIR=/home/ubuntu
 ENV TANZU_TOOLS_DIR=/home/ubuntu
