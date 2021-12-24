@@ -16,9 +16,9 @@ images := ubuntu tanzu_jumpbox kubeshell webtop
 ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 COMMIT := $(shell git rev-parse HEAD)
 
-image_name := ""
-docker_build_args := ""
-docker_file = ""
+image_name := 
+docker_build_args := 
+docker_file = 
 
 .PHONY: all $(images)
 
@@ -46,16 +46,17 @@ tanzu_jumpbox:	docker_build_args = --secret id=jumpbox-secrets,src=${ROOT_DIR}/c
 ########################################################################################################################
 
 $(images):
-	DOCKER_BUILDKIT=1 docker buildx build \
-		--platform linux/amd64 \
-		--progress plain \
-		-t docker.io/$(image_name):latest \
-		-t docker.io/$(image_name):${COMMIT} \
-		-t ghcr.io/$(image_name):latest  \
-		-t ghcr.io/$(image_name):${COMMIT}  \
-		-f $(docker_file) \
-		$(docker_build_args) \
-		${ROOT_DIR}
+	DOCKER_BUILDKIT=1 docker \
+	buildx build \
+	--platform linux/amd64 \
+	--progress plain \
+	-t docker.io/$(image_name):latest \
+	-t docker.io/$(image_name):${COMMIT} \
+	-t ghcr.io/$(image_name):latest \
+	-t ghcr.io/$(image_name):${COMMIT} \
+	-f $(docker_file) \
+	$(docker_build_args) \
+	${ROOT_DIR}
 	docker push docker.io/$(image_name):latest
 	docker push docker.io/$(image_name):${COMMIT}
 	docker push ghcr.io/$(image_name):latest
