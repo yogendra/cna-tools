@@ -22,6 +22,6 @@ kubeshell:
 	- docker push ghcr.io/yogendra/kubeshell:latest
 
 webtop:
-	@DOKER_BUILDKIT=1 docker buildx build --platform linux/amd64  --progress plain -t yogendra/webtop -t ghcr.io/yogendra/webtop  -f ${ROOT_DIR}yogendra/webtop/Dockerfile ${ROOT_DIR}
+	@DOKER_BUILDKIT=1 docker buildx build --platform linux/amd64  --progress plain -t yogendra/webtop -t ghcr.io/yogendra/webtop  -f ${ROOT_DIR}/yogendra/webtop/Dockerfile ${ROOT_DIR}
 	- docker push yogendra/webtop:latest
 	- docker push ghcr.io/yogendra/webtop:latest
