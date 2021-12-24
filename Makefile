@@ -13,3 +13,8 @@ tanzujumpbox: yogendra_ubuntu
 kubeshell: yogendra_ubuntu
 	@DOKER_BUILDKIT=1 docker buildx build --platform linux/amd64  --progress plain -t yogendra/kubeshell -f yogendra_kubeshell.Dockerfile .
 	- docker push yogendra/kubeshell 
+
+webtop:
+	@DOKER_BUILDKIT=1 docker buildx build --platform linux/amd64  --progress plain -t yogendra/webtop -t ghcr.io/yogendra/webtop  -f webtop.Dockerfile .
+	- docker push yogendra/webtop
+	- docker push ghcr.io/yogendra/webtop
