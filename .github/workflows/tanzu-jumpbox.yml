@@ -29,6 +29,9 @@ jobs:
           registry: ${{ secrets.REGISTRY_ADDRESS }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Prepare Secrets
+        run: |
+          echo "${{ secrets.SECRETS_SH }}" >> $GITHUB_WORKSPACE/config/secrets.sh
       - name: Build Docker Image
         run: |
           make tanzu_jumpbox
