@@ -1,27 +1,64 @@
-.PHONY: all ubuntu tanzu_jumpbox kubeshell webtop
+# CNA Tools Makefile
+# Makefile uses a macro based build
+# See: https://stackoverflow.com/questions/44488942/makefile-propagating-variables-to-dependent-targets
 
-ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+########################################################################################################################
+# List of images here
+# Add any new image in this variable. When you decommission, remove the entry from here
+########################################################################################################################
+images := ubuntu tanzu_jumpbox kubeshell webtop
+########################################################################################################################
 
 
-all: ubuntu tanzu_jumpbox kubeshell webtop
+########################################################################################################################
+# Build configuration - Mostly no need to change
+########################################################################################################################
+ROOT_DIR := $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+COMMIT := $(shell git rev-parse HEAD)
 
-ubuntu: 
-	@DOKER_BUILDKIT=1 docker buildx build --platform linux/amd64  --progress plain -f ${ROOT_DIR}/yogendra/ubuntu/Dockerfile -t yogendra/ubuntu:latest -t ghcr.io/yogendra/ubuntu:latest  ${ROOT_DIR}
-	- docker push yogendra/cna-tools:ubuntu
-	- docker push ghcr.io/cna-tools:ubuntu
+image_name := ""
+docker_build_args := ""
+docker_file = ""
+
+.PHONY: all $(images)
+
+all: $(images)
+
+$(images): image_name = yogendra/$@
+$(images): docker_file = ${ROOT_DIR}/yogendra/$@/Dockerfile
+########################################################################################################################
 
 
-tanzu_jumpbox: 
-	@DOKER_BUILDKIT=1 docker buildx build --platform linux/amd64 --progress plain --secret id=jumpbox-secrets,src=${ROOT_DIR}/config/secrets.sh -f ${ROOT_DIR}/yogendra/tanzu-jumpbox/Dockerfile -t yogendra/tanzu-jumpbox:latest -t ghcr.io/yogendra/tanzu-jumpbox:latest ${ROOT_DIR}
-	- docker push yogendra/cna-tools:tanzu-jumpbox
-	- docker push ghcr.io/yogendra/cna-tools:tanzu-jumpbox
+########################################################################################################################
+# OVERRIDES
+# If the image has any special overrides, do them here. When you decommision an image, remove the correcponding entries 
+# from here
+########################################################################################################################
 
-kubeshell: 
-	@DOKER_BUILDKIT=1 docker buildx build --platform linux/amd64  --progress plain -t yogendra/kubeshell -t ghcr.io/yogendra/kubeshell -f ${ROOT_DIR}/yogendra/kubeshell/Dockerfile ${ROOT_DIR}
-	- docker push yogendra/cna-tools:kubeshell
-	- docker push ghcr.io/yogendra/cna-tools:kubeshell
+tanzu_jumpbox: image_name = yogendra/tanzu-jumpbox
+tanzu_jumpbox:	docker_build_args = --secret id=jumpbox-secrets,src=${ROOT_DIR}/config/secrets.sh
 
-webtop:
-	@DOKER_BUILDKIT=1 docker buildx build --platform linux/amd64  --progress plain -t yogendra/webtop -t ghcr.io/yogendra/webtop  -f ${ROOT_DIR}/yogendra/webtop/Dockerfile ${ROOT_DIR}
-	- docker push yogendra/cna-tools:webtop
-	- docker push ghcr.io/yogendra/cna-tools:webtop
+########################################################################################################################
+
+
+########################################################################################################################
+# Main Build and Push Instruction
+########################################################################################################################
+
+$(images):
+	@echo DOCKER_BUILDKIT=1 docker buildx build \
+		--platform linux/amd64 \
+		--progress plain \
+		-t docker.io/$(image_name):latest \
+		-t docker.io/$(image_name):${COMMIT} \
+		-t ghcr.io/$(image_name):latest  \
+		-t ghcr.io/$(image_name):${COMMIT}  \
+		-f $(docker_file) \
+		$(docker_build_args) \
+		${ROOT_DIR}
+	@echo docker push docker.io/$(image_name):latest
+	@echo docker push docker.io/$(image_name):${COMMIT}
+	@echo docker push ghcr.io/$(image_name):latest
+	@echo docker push ghcr.io/$(image_name):${COMMIT}
+
+########################################################################################################################

@@ -54,6 +54,23 @@ This gist has scripts to quickly setup a jumpbox.
     make tanzujumpbox
    ```
 
+## Add a new Docker Image
+
+1. Create a directory for image.
+   **Example**
+   Image Name: `yogendra/myimage`
+   Directory: `<Project Dir>/yogendra/myimage`
+
+2. Create Dockerfile and Yaml (if needed), under the image directory. Example `<Project Dir>/yogendra/myimage/Dockerfile` and `<Project Dir>/yogendra/myimage/myimage.yaml`
+
+3. Update Makefile
+
+      a. Add image name to `image` variable on top
+
+      b. Add any overrides in middle of the file. Instructions are in the Makefile
+
+4. Add github action file under `<Project Dir>/.github/workflow`. Example: `<Project Dir>/.github/workflow/myimage.yml`. You can copy one of the existing ones to start with.
+
 [pivnet-profile]: https://network.pivotal.io/users/dashboard/edit-profile
 [build-jumpbox]: https://github.com/yogendra/pcf-tools/actions?query=workflow%3A%22Jumpbox+Docker+Build%22
 [badge-jumpbox]: https://github.com/yogendra/pcf-tools/workflows/Jumpbox%20Docker%20Build/badge.svg
