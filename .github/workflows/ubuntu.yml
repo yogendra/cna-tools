@@ -4,6 +4,8 @@ on:
   push:
     paths:
     - 'yogendra/ubuntu/**'
+  workflow_dispatch:
+  
 
 jobs:
   docker-build:
