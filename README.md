@@ -1,6 +1,16 @@
-# PCF Tools
+# Cloud Native Architecture - Tools
 
-[![Jumpbox Docker Build][badge-jumpbox]][build-jumpbox]
+This is a repo for frequently used CNA tools. I try to maintain a set of script and corresponding docker container images for this tools.
+
+## Build Status
+
+- [![Kubeshell](https://github.com/yogendra/cna-tools/actions/workflows/kubeshell.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/kubeshell.yml)
+- [![Tanzu Jumpbox](https://github.com/yogendra/cna-tools/actions/workflows/tanzu-jumpbox.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/tanzu-jumpbox.yml)
+- [![Ubuntu](https://github.com/yogendra/cna-tools/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/ubuntu.yml)
+- [![Webtop](https://github.com/yogendra/cna-tools/actions/workflows/webtop.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/webtop.yml)
+
+
+## Introduction
 
 This gist has scripts to quickly setup a jumpbox.
 
