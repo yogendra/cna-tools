@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'yogendra/tanzu-jumpbox/**'
+    - 'Makefile'
   workflow_run:
     workflows: 
     - Ubuntu

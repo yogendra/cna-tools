@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'yogendra/kubeshell/**'
+    - 'Makefile'
   workflow_run:
     workflows: 
     - Ubuntu

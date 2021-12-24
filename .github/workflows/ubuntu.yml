@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'yogendra/ubuntu/**'
+    - 'Makefile'
   workflow_dispatch:
   
 
