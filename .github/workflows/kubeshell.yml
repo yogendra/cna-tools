@@ -9,6 +9,8 @@ on:
     - Ubuntu
     types: 
     - completed
+  workflow_dispatch:
+  
 
 jobs:
   docker-build:
