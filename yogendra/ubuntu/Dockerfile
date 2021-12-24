@@ -40,6 +40,6 @@ RUN mkdir $HOME/bin && \
   
 WORKDIR /home/ubuntu
 
-RUN curl -L https://raw.githubusercontent.com/yogendra/dotfiles/master/scripts/dotfiles-init.Linux.sh  | bash 
+RUN curl -sSL https://raw.githubusercontent.com/yogendra/dotfiles/master/scripts/dotfiles-init.Linux.sh  | bash 
 
 CMD ["bash", "-l"]
