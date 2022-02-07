@@ -11,7 +11,7 @@ on:
 env:
   docker_image_name: webtop
   docker_context: yogendra/webtop
-  docker_file: Dockerfile
+  docker_file: yogendra/webtop/Dockerfile
 
 jobs:
   docker-build:

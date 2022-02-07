@@ -11,7 +11,7 @@ on:
 env:
   docker_image_name: ubuntu
   docker_context: yogendra/ubuntu
-  docker_file: Dockerfile
+  docker_file: yogendra/ubuntu/Dockerfile
 
 jobs:
   docker-build:

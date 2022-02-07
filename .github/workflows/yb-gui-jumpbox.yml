@@ -11,7 +11,7 @@ on:
 env:
   docker_image_name: yb-gui-jumpbox
   docker_context: yogendar/yb-gui-jumpbox
-  docker_file: Dockerfile
+  docker_file: yogendar/yb-gui-jumpbox/Dockerfile
 
 jobs:
   docker-build:
