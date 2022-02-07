@@ -15,7 +15,7 @@ on:
 
 env:
   docker_image_name: tanzu-jumpbox
-  docker_context: yogendra/tanzu-jumpbox
+  docker_context: ${{github.workspace}}
 
 jobs:
   docker-build:
