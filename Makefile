@@ -40,11 +40,12 @@ $(images): docker_context = ${ROOT_DIR}/yogendra/$@
 kubeshell: docker_context = ${ROOT_DIR}
 
 tanzu_jumpbox: image_name = yogendra/tanzu-jumpbox
-tanzu_jumpbox:	docker_build_args = --secret id=jumpbox-secrets,src=${ROOT_DIR}/config/secrets.sh
+tanzu_jumpbox: docker_build_args = --secret id=jumpbox-secrets,src=${ROOT_DIR}/config/secrets.sh
 tanzu_jumpbox: docker_context = ${ROOT_DIR}
 
-yb_gui_jumpbox: image_name = yogendra/yb-gui-jumpbox
 
+yb_gui_jumpbox: image_name = yogendra/yb-gui-jumpbox
+yb_gui_jumpbox: docker_context = yogendra/yb-gui-jumpbox
 ########################################################################################################################
 
 

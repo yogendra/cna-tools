@@ -10,7 +10,8 @@ on:
   
 env:
   docker_image_name: yb-gui-jumpbox
-  docker_context: yogendra/yb-gui-jumpbox
+  docker_context: yogendar/yb-gui-jumpbox
+  docker_file: Dockerfile
 
 jobs:
   docker-build:
@@ -39,6 +40,7 @@ jobs:
         with:
           context: ${{env.docker_context}}
           platforms: linux/amd64,linux/arm64
+          file: ${{env.docker_file}}
           push: true
           tags: |
             ${{ secrets.REGISTRY_USERNAME }}/${{env.docker_image_name}}:latest

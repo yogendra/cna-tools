@@ -16,6 +16,7 @@ on:
 env:
   docker_image_name: tanzu-jumpbox
   docker_context: ${{github.workspace}}
+  docker_file: yogendra/tanzu-jumpbox/Dockerfile
 
 jobs:
   docker-build:
@@ -44,6 +45,7 @@ jobs:
         with:
           context: ${{env.docker_context}}
           platforms: linux/amd64,linux/arm64
+          file: ${{env.docker_file}}
           push: true
           tags: |
             ${{ secrets.REGISTRY_USERNAME }}/${{env.docker_image_name}}:latest
