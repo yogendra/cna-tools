@@ -1,6 +1,10 @@
 FROM ubuntu:latest
+LABEL org.opencontainers.image.description Ubuntu based workspace image
+LABEL org.opencontainers.image.source  https://github.com/yogendra/cna-tools/blob/main/yogendra/ubuntu/Dockerfile
+LABEL org.opencontainers.image.vendor Yogi Rampuria (@yogendra)
+LABEL org.opencontainers.image.title  yogendra/ubuntu
 LABEL org.opencontainers.image.source https://github.com/yogendra/cna-tools
-ADD config/sources.list /etc/apt/sources.list
+
 ENV TIMEZONE=Asia/Singapore
 
 RUN set -e && \
