@@ -31,9 +31,9 @@ jobs:
           registry: ${{ secrets.REGISTRY_ADDRESS }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      - name: Build Docker Image
-        run: |
-          make yb_gui_jumpbox
+      # - name: Build Docker Image
+      #   run: |
+      #     make yb_gui_jumpbox
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -41,7 +41,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            yogendra/yb-gui-jumpbox:latest
-            yogendra/yb-gui-jumpbox:${{github.sha}}
-            ghcr.io/yogendra/yb-gui-jumpbox:latest
-            ghcr.io/yogendra/yb-gui-jumpbox:${{github.sha}}
+            ${{ secrets.REGISTRY_USERNAME }}/yb-gui-jumpbox:latest
+            ${{ secrets.REGISTRY_USERNAME }}/yb-gui-jumpbox:${{github.sha}}
+            ghcr.io/${{ github.actor }}/yb-gui-jumpbox:latest
+            ghcr.io/${{ github.actor }}/yb-gui-jumpbox:${{github.sha}}
