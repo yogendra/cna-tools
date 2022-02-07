@@ -20,12 +20,13 @@ image_name :=
 docker_build_args := 
 docker_file = 
 
-.PHONY: all $(images)
+.PHONY: all $(images) amd64 arm64 image
 
 all: $(images)
 
 $(images): image_name = yogendra/$@
 $(images): docker_file = ${ROOT_DIR}/yogendra/$@/Dockerfile
+
 ########################################################################################################################
 
 
@@ -45,21 +46,62 @@ tanzu_jumpbox:	docker_build_args = --secret id=jumpbox-secrets,src=${ROOT_DIR}/c
 # Main Build and Push Instruction
 ########################################################################################################################
 
-$(images):
+
+
+$(images): 
+	@echo "$(image_name): Make for AMD64"
 	DOCKER_BUILDKIT=1 docker \
 	buildx build \
 	--platform linux/amd64 \
 	--progress plain \
-	-t docker.io/$(image_name):latest \
-	-t docker.io/$(image_name):${COMMIT} \
-	-t ghcr.io/$(image_name):latest \
-	-t ghcr.io/$(image_name):${COMMIT} \
+	-t docker.io/$(image_name):latest-amd64 \
+	-t docker.io/$(image_name):${COMMIT}-amd64 \
+	-t ghcr.io/$(image_name):latest-amd64 \
+	-t ghcr.io/$(image_name):${COMMIT}-amd64 \
 	-f $(docker_file) \
 	$(docker_build_args) \
 	${ROOT_DIR}
-	docker push docker.io/$(image_name):latest
+	docker push docker.io/$(image_name):latest-amd64
+	docker push docker.io/$(image_name):${COMMIT}-amd64
+	docker push ghcr.io/$(image_name):latest-amd64
+	docker push ghcr.io/$(image_name):${COMMIT}-amd64	
+	@echo "$@: Make for ARM64"
+	DOCKER_BUILDKIT=1 docker \
+	buildx build \
+	--platform linux/arm64 \
+	--progress plain \
+	-t docker.io/$(image_name):latest-arm64 \
+	-t docker.io/$(image_name):${COMMIT}-arm64 \
+	-t ghcr.io/$(image_name):latest-arm64 \
+	-t ghcr.io/$(image_name):${COMMIT}-arm64 \
+	-f $(docker_file) \
+	$(docker_build_args) \
+	${ROOT_DIR}
+	docker push docker.io/$(image_name):latest-arm64
+	docker push docker.io/$(image_name):${COMMIT}-arm64
+	docker push ghcr.io/$(image_name):latest-arm64
+	docker push ghcr.io/$(image_name):${COMMIT}-arm64
+	@echo "$@: Create manifest"	
+	docker manifest create \
+	docker.io/$(image_name):latest \
+	--amend docker.io/$(image_name):latest-amd64 \
+	--amend docker.io/$(image_name):latest-arm64
+	docker manifest create \
+	docker.io/$(image_name):${COMMIT} \
+	--amend docker.io/$(image_name):${COMMIT}-amd64 \
+	--amend docker.io/$(image_name):${COMMIT}-arm64
+	docker manifest create \
+	ghcr.io/$(image_name):latest \
+	--amend ghcr.io/$(image_name):latest-amd64 \
+	--amend ghcr.io/$(image_name):latest-arm64
+	docker manifest create \
+	ghcr.io/$(image_name):${COMMIT} \
+	--amend ghcr.io/$(image_name):${COMMIT}-amd64 \
+	--amend ghcr.io/$(image_name):${COMMIT}-arm64
+ 	docker push docker.io/$(image_name):latest
 	docker push docker.io/$(image_name):${COMMIT}
 	docker push ghcr.io/$(image_name):latest
 	docker push ghcr.io/$(image_name):${COMMIT}
+
 
 ########################################################################################################################
