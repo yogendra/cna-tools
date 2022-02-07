@@ -1,4 +1,8 @@
 FROM yogendra/ubuntu as base
+LABEL org.opencontainers.image.description Tanzu Jumpbox - All the toosl for workign with tanzu products
+LABEL org.opencontainers.image.source  https://github.com/yogendra/cna-tools/blob/main/yogendra/tanzu_jumpbox/Dockerfile
+LABEL org.opencontainers.image.vendor Yogi Rampuria (@yogendra)
+LABEL org.opencontainers.image.title  yogendra/tanzu_jumpbox
 LABEL org.opencontainers.image.source https://github.com/yogendra/cna-tools
 
 ENV PROJ_DIR=/home/ubuntu
