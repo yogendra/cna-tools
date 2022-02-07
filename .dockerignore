@@ -4,3 +4,4 @@ config/secrets.sh
 .envrc
 
 *.Dockerfile
+.vscode/
