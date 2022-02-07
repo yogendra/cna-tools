@@ -5,6 +5,7 @@ on:
     paths:
     - 'yogendra/ubuntu/**'
     - 'Makefile'
+    - '.github/workflows/ubuntu.yml'
   workflow_dispatch:
   
 
