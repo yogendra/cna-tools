@@ -3,7 +3,7 @@ name: Tanzu Jumpbox
 on: 
   push:
     paths:
-    - 'yogendra/tanzu-jumpbox/**'
+    - 'yogendra/tanzu_jumpbox/**'
     - 'Makefile'
   workflow_run:
     workflows: 
