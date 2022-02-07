@@ -103,7 +103,7 @@ $(images):
 	ghcr.io/$(image_name):${COMMIT} \
 	--amend ghcr.io/$(image_name):${COMMIT}-amd64 \
 	--amend ghcr.io/$(image_name):${COMMIT}-arm64
- 	docker manifest push docker.io/$(image_name):latest
+	docker manifest push docker.io/$(image_name):latest
 	docker manifest push docker.io/$(image_name):${COMMIT}
 	docker manifest push ghcr.io/$(image_name):latest
 	docker manifest push ghcr.io/$(image_name):${COMMIT}
