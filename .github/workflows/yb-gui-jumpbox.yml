@@ -15,6 +15,10 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
       - name: Log in to the GHCR Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -30,3 +34,14 @@ jobs:
       - name: Build Docker Image
         run: |
           make yb_gui_jumpbox
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: yogendra/yb_gui_jumpbox
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            yogendra/yb-gui-jumpbox:latest
+            yogendra/yb-gui-jumpbox:${{github.sha}}
+            ghcr.io/yogendra/yb-gui-jumpbox:latest
+            ghcr.io/yogendra/yb-gui-jumpbox:${{github.sha}}
