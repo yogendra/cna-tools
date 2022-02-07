@@ -6,7 +6,7 @@
 # List of images here
 # Add any new image in this variable. When you decommission, remove the entry from here
 ########################################################################################################################
-images := ubuntu tanzu_jumpbox kubeshell webtop
+images := ubuntu tanzu_jumpbox kubeshell webtop yb_gui_jumpbox
 ########################################################################################################################
 
 
@@ -26,6 +26,7 @@ all: $(images)
 
 $(images): image_name = yogendra/$@
 $(images): docker_file = ${ROOT_DIR}/yogendra/$@/Dockerfile
+$(images): docker_context = ${ROOT_DIR}/yogendra/$@
 
 ########################################################################################################################
 
@@ -36,8 +37,12 @@ $(images): docker_file = ${ROOT_DIR}/yogendra/$@/Dockerfile
 # from here
 ########################################################################################################################
 
+kubeshell: docker_context = ${ROOT_DIR}
+
 tanzu_jumpbox: image_name = yogendra/tanzu-jumpbox
 tanzu_jumpbox:	docker_build_args = --secret id=jumpbox-secrets,src=${ROOT_DIR}/config/secrets.sh
+
+yb_gui_jumpbox: image_name = yogendra/yb-gui-jumpbox
 
 ########################################################################################################################
 
@@ -60,7 +65,7 @@ $(images):
 	-t ghcr.io/$(image_name):${COMMIT}-amd64 \
 	-f $(docker_file) \
 	$(docker_build_args) \
-	${ROOT_DIR}
+	$(docker_context)
 	docker push docker.io/$(image_name):latest-amd64
 	docker push docker.io/$(image_name):${COMMIT}-amd64
 	docker push ghcr.io/$(image_name):latest-amd64
@@ -76,7 +81,7 @@ $(images):
 	-t ghcr.io/$(image_name):${COMMIT}-arm64 \
 	-f $(docker_file) \
 	$(docker_build_args) \
-	${ROOT_DIR}
+	$(docker_context)
 	docker push docker.io/$(image_name):latest-arm64
 	docker push docker.io/$(image_name):${COMMIT}-arm64
 	docker push ghcr.io/$(image_name):latest-arm64
