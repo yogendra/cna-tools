@@ -32,7 +32,7 @@ spec:
               value: /
             - name: TZ
               value: Asia/Singapore
-          image: lscr.io/linuxserver/webtop:ubuntu-xfce
+          image: ghcr.io/yogendra/webtop:ubuntu-xfce
           name: webtop
           ports:
             - containerPort: 3000
