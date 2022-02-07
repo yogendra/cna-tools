@@ -5,6 +5,7 @@ on:
     paths:
     - 'yogendra/webtop/**'
     - 'Makefile'
+    - '.github/workflows/webtop.yml'
   workflow_dispatch:
   
 
