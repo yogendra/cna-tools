@@ -5,6 +5,7 @@ on:
     paths:
     - 'yogendra/tanzu_jumpbox/**'
     - 'Makefile'
+    - '.github/workflows/tanzu-jumpbox.yml'
   workflow_run:
     workflows: 
     - Ubuntu
