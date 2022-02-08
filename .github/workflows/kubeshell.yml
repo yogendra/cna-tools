@@ -4,6 +4,8 @@ on:
   push:
     paths:
     - 'yogendra/kubeshell/**'
+    - '.github/workflows/kubeshell.yml'
+    - 'scripts/k8s-tools-install.sh'
     - 'Makefile'
   workflow_run:
     workflows: 
