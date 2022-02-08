@@ -10,7 +10,7 @@ on:
   
 env:
   docker_image_name: yb-gui-jumpbox
-  docker_context: yogendar/yb-gui-jumpbox
+  docker_context: yogendra/yb-gui-jumpbox
   docker_file: yogendar/yb-gui-jumpbox/Dockerfile
 
 jobs:
