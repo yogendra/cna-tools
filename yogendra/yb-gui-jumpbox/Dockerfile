@@ -9,6 +9,7 @@ LABEL org.opencontainers.image.title  yogendra/webtop
 LABEL org.opencontainers.image.source https://github.com/yogendra/cna-tools
 
 ADD usr/share/applications/* /usr/share/applications
+
 RUN set -e && \
   sudo apt-get update && \
   sudo apt-get install -qqy openjdk-17-jre-headless && \
