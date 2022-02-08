@@ -5,22 +5,29 @@ This is a repo for frequently used CNA tools. I try to maintain a set of script 
 ## Build Status
 
 - [![Kubeshell](https://github.com/yogendra/cna-tools/actions/workflows/kubeshell.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/kubeshell.yml)
-- [![Tanzu Jumpbox](https://github.com/yogendra/cna-tools/actions/workflows/tanzu-jumpbox.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/tanzu-jumpbox.yml)
+- [![Cloud Jumpbox](https://github.com/yogendra/cna-tools/actions/workflows/cloud-jumpbox.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/cloud-jumpbox.yml)
 - [![Ubuntu](https://github.com/yogendra/cna-tools/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/ubuntu.yml)
 - [![Webtop](https://github.com/yogendra/cna-tools/actions/workflows/webtop.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/webtop.yml)
+- [![Webtop](https://github.com/yogendra/cna-tools/actions/workflows/ubuntu-minimal.yml/badge.svg)](https://github.com/yogendra/cna-tools/actions/workflows/ubuntu-minimal.yml)
 
+## Local Build
+
+On Mac, you need to create a builder
+
+```bash
+docker buildx create --use --name multiarch --node multiarch --driver-opt network=host --bootstrap
+```
 
 ## Introduction
 
-This gist has scripts to quickly setup a jumpbox.
+This repo has scripts to quickly setup a jumpbox.
 
-- Downloads tools (cf, om, bbl, etc)
+- Downloads common tools
 - Add direnv support
-- Add PCF extensions
 - Setup SSH keys for login from my devices
 - **Adds my SSH public keys to `authorized_keys`**
 - Downloads tile/stemcell packages from pivnet
-- Build a jumpbox container image
+- Build into container image
 
 ## Update assets version/urls
 
@@ -31,27 +38,10 @@ This gist has scripts to quickly setup a jumpbox.
 
 ## Build Docker Image
 
-1. Create a file named `secrets.sh` in the project directory, with following content:
-
-   ```bash
-   export PIVNET_LEGACY_TOKEN=<CHANGE_ME>
-   export GITHUB_TOKEN="<CHANGE_ME>"
-   export GITHUB_REPO="<CHANGE_ME>"
-   export TIMEZONE=<CHANGE_ME>
-   ```
-
-   - Replace `<CHANGE_ME>` with proper values.
-   - `PIVNET_LEGACY_TOKEN` is token form [Pivnet Profile Page][pivnet-profile]. This is **required**
-   - `GITHUB_TOKEN` is used for accessing github. This is useful if you hit API access limits.
-   - `GITHUB_REPO` is the repository on github that you want to use for init scripts
-   - `TIMEZONE` is the timezone you want to set in the destination image
-
-   **NOTE**: `GITHUB_OPTIONS` is optional and should be used if you run into API limit restrictions.
-
 1. Build with make
 
    ```bash
-    make tanzujumpbox
+    make
    ```
 
 ## Add a new Docker Image
