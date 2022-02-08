@@ -6,7 +6,7 @@
 # List of images here
 # Add any new image in this variable. When you decommission, remove the entry from here
 ########################################################################################################################
-images := ubuntu tanzu_jumpbox kubeshell webtop yb_gui_jumpbox
+images := ubuntu cloud_jumpbox kubeshell webtop yb_gui_jumpbox ubuntu-minimal
 ########################################################################################################################
 
 
@@ -39,9 +39,9 @@ $(images): docker_context = ${ROOT_DIR}/yogendra/$@
 
 kubeshell: docker_context = ${ROOT_DIR}
 
-tanzu_jumpbox: image_name = yogendra/tanzu-jumpbox
-tanzu_jumpbox: docker_build_args = --secret id=jumpbox-secrets,src=${ROOT_DIR}/config/secrets.sh
-tanzu_jumpbox: docker_context = ${ROOT_DIR}
+cloud_jumpbox: image_name = yogendra/cloud-jumpbox
+cloud_jumpbox: docker_build_args = --secret id=jumpbox-secrets,src=${ROOT_DIR}/config/secrets.sh
+cloud_jumpbox: docker_context = ${ROOT_DIR}
 
 
 yb_gui_jumpbox: image_name = yogendra/yb-gui-jumpbox
@@ -53,62 +53,17 @@ yb_gui_jumpbox: docker_context = yogendra/yb-gui-jumpbox
 # Main Build and Push Instruction
 ########################################################################################################################
 
-
-
-$(images): 
-	@echo "$(image_name): Make for AMD64"
-	DOCKER_BUILDKIT=1 docker \
-	buildx build \
-	--platform linux/amd64 \
-	--progress plain \
-	-t docker.io/$(image_name):latest-amd64 \
-	-t docker.io/$(image_name):${COMMIT}-amd64 \
-	-t ghcr.io/$(image_name):latest-amd64 \
-	-t ghcr.io/$(image_name):${COMMIT}-amd64 \
-	-f $(docker_file) \
-	$(docker_build_args) \
-	$(docker_context)
-	docker push docker.io/$(image_name):latest-amd64
-	docker push docker.io/$(image_name):${COMMIT}-amd64
-	docker push ghcr.io/$(image_name):latest-amd64
-	docker push ghcr.io/$(image_name):${COMMIT}-amd64	
-	@echo "$@: Make for ARM64"
-	DOCKER_BUILDKIT=1 docker \
-	buildx build \
-	--platform linux/arm64 \
-	--progress plain \
-	-t docker.io/$(image_name):latest-arm64 \
-	-t docker.io/$(image_name):${COMMIT}-arm64 \
-	-t ghcr.io/$(image_name):latest-arm64 \
-	-t ghcr.io/$(image_name):${COMMIT}-arm64 \
-	-f $(docker_file) \
-	$(docker_build_args) \
-	$(docker_context)
-	docker push docker.io/$(image_name):latest-arm64
-	docker push docker.io/$(image_name):${COMMIT}-arm64
-	docker push ghcr.io/$(image_name):latest-arm64
-	docker push ghcr.io/$(image_name):${COMMIT}-arm64
-	@echo "$@: Create manifest"	
-	docker manifest create \
-	docker.io/$(image_name):latest \
-	--amend docker.io/$(image_name):latest-amd64 \
-	--amend docker.io/$(image_name):latest-arm64
-	docker manifest create \
-	docker.io/$(image_name):${COMMIT} \
-	--amend docker.io/$(image_name):${COMMIT}-amd64 \
-	--amend docker.io/$(image_name):${COMMIT}-arm64
-	docker manifest create \
-	ghcr.io/$(image_name):latest \
-	--amend ghcr.io/$(image_name):latest-amd64 \
-	--amend ghcr.io/$(image_name):latest-arm64
-	docker manifest create \
-	ghcr.io/$(image_name):${COMMIT} \
-	--amend ghcr.io/$(image_name):${COMMIT}-amd64 \
-	--amend ghcr.io/$(image_name):${COMMIT}-arm64
-	docker manifest push docker.io/$(image_name):latest
-	docker manifest push docker.io/$(image_name):${COMMIT}
-	docker manifest push ghcr.io/$(image_name):latest
-	docker manifest push ghcr.io/$(image_name):${COMMIT}
-
+$(images):
+	docker buildx build \
+		--push \
+		--platform linux/amd64,linux/arm64 \
+		--progress plain \
+		-t docker.io/$(image_name):latest \
+		-t docker.io/$(image_name):${COMMIT} \
+		-t ghcr.io/$(image_name):latest \
+		-t ghcr.io/$(image_name):${COMMIT} \
+		-f $(docker_file) \
+		$(docker_build_args) \
+		$(docker_context)
 
 ########################################################################################################################
