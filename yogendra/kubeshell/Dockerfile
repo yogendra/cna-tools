@@ -8,4 +8,6 @@ LABEL org.opencontainers.image.source https://github.com/yogendra/cna-tools
 
 ADD --chown=ubuntu scripts/k8s-tools-install.sh  k8s-tools-install.sh
 
-RUN ./k8s-tools-install.sh
+RUN  curl -sSL https://raw.githubusercontent.com/yogendra/dotfiles/master/scripts/jumpbox-init.sh | bash -s -- k8s
+
+
