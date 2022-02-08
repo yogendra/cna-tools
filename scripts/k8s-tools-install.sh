@@ -22,7 +22,8 @@ source ~/.bashrc
 wget -O- https://carvel.dev/install.sh | K14SIO_INSTALL_BIN_DIR=$HOME/bin bash
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | HELM_INSTALL_DIR=$HOME/bin bash
 curl -sS https://webinstall.dev/k9s | bash 
-rm -rf $HOME/Downloads/*.tar.gz
+rm -rf $HOME/Downloads/*.tar.gz || true
+
 (
   set -x; cd "$(mktemp -d)" &&
   OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
