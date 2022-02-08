@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail
 
-mkdir -p $HOME/bin || true
+set -Eeuo pipefail
+export PATH=$HOME/bin:$PATH
 
 sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
-
 sudo apt-get update
 sudo apt-get install -y kubectl
 
 cat <<EOF >> ~/.bashrc
-export PATH=$HOME/.local/bin:$HOME/.krew/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:$HOME/.krew/bin:$PATH
 alias k=kubectl
 source <(kubectl completion bash)
 complete -F __start_kubectl k
@@ -22,7 +20,10 @@ EOF
 source ~/.bashrc
  
 wget -O- https://carvel.dev/install.sh | K14SIO_INSTALL_BIN_DIR=$HOME/bin bash
-curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | HELM_INSTALL_DIR=$HOME/bin bash
+
+curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | USE_SUDO=false HELM_INSTALL_DIR=$HOME/bin bash
+
+
 curl -sS https://webinstall.dev/k9s | bash 
 rm -rf $HOME/Downloads/*.tar.gz || true
 
