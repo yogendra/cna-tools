@@ -6,6 +6,11 @@ on:
     - 'yogendra/yb-gui-jumpbox/**'
     - 'Makefile'
     - '.github/workflows/yb-gui-jumpbox.yml'
+  workflow_run:
+    workflows: 
+    - Webtop
+    types: 
+    - completed  
   workflow_dispatch:
   
 env:
