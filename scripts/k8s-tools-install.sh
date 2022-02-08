@@ -33,4 +33,4 @@ rm -rf $HOME/Downloads/*.tar.gz
   ./"${KREW}" install krew
 )
 
-kubectl krew install access-matrix cert-manager ctx konfig ns tail
+kubectl krew install access-matrix cert-manager ctx konfig ns tail  || echo "[WARNING] Some plugins were not installed"
