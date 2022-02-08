@@ -1,11 +1,11 @@
-name: Tanzu Jumpbox
+name: Cloud Jumpbox
 
 on: 
   push:
     paths:
-    - 'yogendra/tanzu-jumpbox/**'
+    - 'yogendra/cloud-jumpbox/**'
     - 'Makefile'
-    - '.github/workflows/tanzu-jumpbox.yml'
+    - '.github/workflows/cloud-jumpbox.yml'
   workflow_run:
     workflows: 
     - Ubuntu
@@ -14,9 +14,9 @@ on:
   workflow_dispatch:
 
 env:
-  docker_image_name: tanzu-jumpbox
+  docker_image_name: cloud-jumpbox
   docker_context: ${{github.workspace}}
-  docker_file: yogendra/tanzu-jumpbox/Dockerfile
+  docker_file: yogendra/cloud-jumpbox/Dockerfile
 
 jobs:
   docker-build:

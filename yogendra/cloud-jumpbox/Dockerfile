@@ -16,9 +16,5 @@ RUN mkdir -p /home/ubuntu/workspace
 
 VOLUME /home/ubuntu/workspace
 
-RUN --mount=type=secret,id=jumpbox-secrets,dst=/home/ubuntu/secrets.sh \
-    eval $(sudo cat /home/ubuntu/secrets.sh) && \    
-    /home/ubuntu/scripts/tanzu-jumpbox-init.sh && \
-    /home/ubuntu/scripts/k8s-tools-install.sh && \
-    sudo rm -rf /var/lib/apt/lists/* 
+RUN  curl -sSL https://raw.githubusercontent.com/yogendra/dotfiles/master/scripts/jumpbox-init.sh | bash -s -- common k8s azure aws gcp profile
 
